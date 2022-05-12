@@ -1,0 +1,20 @@
+{
+  "template": "https://github.com/DHARPA-Project/kiara_plugin.develop.git",
+  "commit": "e72f603925fdd2c531c4fe7468d4c1f83610a741",
+  "context": {
+    "cookiecutter": {
+      "full_name": "Markus Binsteiner",
+      "email": "markus@frkl.io",
+      "project_name": "develop",
+      "project_slug": "develop",
+      "project_short_description": " Development utilities for kiara.",
+      "github_user": "DHARPA-Project",
+      "anaconda_user": "dharpa",
+      "_extensions": [
+        "cookiecutter.extensions.JsonifyExtension"
+      ],
+      "_template": "https://github.com/DHARPA-Project/kiara_plugin.develop.git"
+    }
+  },
+  "directory": null
+}
