@@ -2,5 +2,3 @@
 
 """This module contains the value type classes that are used in the ``kiara_plugin.develop`` package.
 """
-
-

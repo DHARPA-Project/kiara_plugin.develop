@@ -12,7 +12,7 @@ Development utilities for kiara.
 
 ### {{ item_type }}
 {% for item, details in item_group.items() %}
-- [`{{ item }}`][kiara_info.{{ item_type }}.{{ item }}]: {{ details.documentation.description }} 
+- [`{{ item }}`][kiara_info.{{ item_type }}.{{ item }}]: {{ details.documentation.description }}
 {% endfor %}
 {% endfor %}
 
@@ -20,5 +20,3 @@ Development utilities for kiara.
 
  - Documentation: [https://DHARPA-Project.github.io/kiara_plugin.develop](https://DHARPA-Project.github.io/kiara_plugin.develop)
  - Code: [https://github.com/DHARPA-Project/kiara_plugin.develop](https://github.com/DHARPA-Project/kiara_plugin.develop)
-
-

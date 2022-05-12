@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""This module contains the metadata (and other) models that are used in the ``kiara_plugin.develop`` package.
+"""This module contains the metadata (and other) models that are used in the ``kiara_plugin.{{ cookiecutter.project_slug }}`` package.
 
 Those models are convenience wrappers that make it easier for *kiara* to find, create, manage and version metadata -- but also
 other type of models -- that is attached to data, as well as *kiara* modules.

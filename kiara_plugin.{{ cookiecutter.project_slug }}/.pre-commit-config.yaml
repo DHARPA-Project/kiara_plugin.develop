@@ -24,19 +24,18 @@ repos:
   rev: 22.3.0
   hooks:
     - id: black
-      exclude: '^kiara_plugin.\{\{ cookiecutter.project_slug \}\}/tests/test_kiara_modules_default.py|kiara_plugin.\{\{ cookiecutter.project_slug \}\}/scripts/documentation/gen_module_doc.py'
 
 - repo: https://github.com/myint/autoflake
   rev: 'v1.4'
   hooks:
     - id: autoflake
       args: ['--in-place', '--remove-all-unused-imports']
+      # args: ['--in-place', '--remove-all-unused-imports', '--remove-unused-variable']
 
 - repo: https://gitlab.com/pycqa/flake8
   rev: '3.8.4'  # pick a git hash / tag to point to
   hooks:
     - id: flake8
-      exclude: '^kiara_plugin.\{\{ cookiecutter.project_slug \}\}'
 
 - repo: https://github.com/pre-commit/mirrors-mypy
   rev: 'v0.942'  # Use the sha / tag you want to point at
@@ -55,14 +54,12 @@ repos:
     exclude: 'setup.cfg'
   - id: check-added-large-files
   - id: check-ast
-    exclude: '^kiara_plugin.\{\{ cookiecutter.project_slug \}\}'
   - id: check-json
   - id: check-merge-conflict
   - id: check-xml
   - id: check-yaml
-    exclude: 'tests/\*|^kiara_plugin.\{\{ cookiecutter.project_slug \}\}'
+    exclude: 'tests/\*'
   - id: debug-statements
-    exclude: '^kiara_plugin.\{\{ cookiecutter.project_slug \}\}'
   - id: end-of-file-fixer
     exclude: '.*.json'
   - id: requirements-txt-fixer

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Top-level package for kiara_plugin.develop."""
+"""Top-level package for kiara_plugin.{{ cookiecutter.project_slug }}."""
 
 
 import os
@@ -13,42 +13,42 @@ from kiara.utils.class_loading import (
     find_pipeline_base_path_for_module,
 )
 
-__author__ = """Markus Binsteiner"""
-__email__ = "markus@frkl.io"
+__author__ = """{{ cookiecutter.full_name }}"""
+__email__ = "{{ cookiecutter.email }}"
 
 
 KIARA_METADATA = {
     "authors": [{"name": __author__, "email": __email__}],
-    "description": "Kiara modules for: develop",
+    "description": "Kiara modules for: {{ cookiecutter.project_name }}",
     "references": {
         "source_repo": {
             "desc": "The module package git repository.",
-            "url": "https://github.com/DHARPA-Project/kiara_plugin.develop",
+            "url": "https://github.com/{{ cookiecutter.github_user }}/kiara_plugin.{{ cookiecutter.project_slug }}",
         },
         "documentation": {
             "desc": "The url for the module package documentation.",
-            "url": "https://DHARPA-Project.github.io/kiara_plugin.develop/",
+            "url": "https://{{ cookiecutter.github_user }}.github.io/kiara_plugin.{{ cookiecutter.project_slug }}/",
         },
     },
-    "tags": ["develop"],
-    "labels": {"package": "kiara_plugin.develop"},
+    "tags": ["{{ cookiecutter.project_slug }}"],
+    "labels": {"package": "kiara_plugin.{{ cookiecutter.project_slug }}"},
 }
 
 find_modules: KiaraEntryPointItem = (
     find_kiara_modules_under,
-    "kiara_plugin.develop.develop",
+    "kiara_plugin.{{ cookiecutter.project_slug }}.{{ cookiecutter.project_slug }}",
 )
 find_model_classes: KiaraEntryPointItem = (
     find_kiara_model_classes_under,
-    "kiara_plugin.develop.models",
+    "kiara_plugin.{{ cookiecutter.project_slug }}.models",
 )
 find_data_types: KiaraEntryPointItem = (
     find_data_types_under,
-    "kiara_plugin.develop.data_types",
+    "kiara_plugin.{{ cookiecutter.project_slug }}.data_types",
 )
 find_pipelines: KiaraEntryPointItem = (
     find_pipeline_base_path_for_module,
-    "kiara_plugin.develop.pipelines",
+    "kiara_plugin.{{ cookiecutter.project_slug }}.pipelines",
     KIARA_METADATA,
 )
 

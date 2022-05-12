@@ -36,7 +36,7 @@ class ExampleModule(KiaraModule):
     """
 
     _config_cls = ExampleModuleConfig
-    _module_type_name = "develop.example"
+    _module_type_name = "{{ cookiecutter.project_slug }}.example"
 
     def create_inputs_schema(
         self,

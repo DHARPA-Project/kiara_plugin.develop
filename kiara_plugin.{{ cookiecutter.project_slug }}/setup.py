@@ -52,6 +52,8 @@ def get_extra_requires(add_all=True, add_all_dev=True):
 
 if __name__ in ["__main__", "builtins", "__builtin__"]:
     setup(
-        use_scm_version={"write_to": "src/kiara_plugin/develop/version.txt"},
+        use_scm_version={
+            "write_to": "src/kiara_plugin/{{ cookiecutter.project_slug }}/version.txt"
+        },
         extras_require=get_extra_requires(),
     )

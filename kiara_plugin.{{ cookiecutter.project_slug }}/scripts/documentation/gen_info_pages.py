@@ -8,7 +8,7 @@ import builtins
 from kiara.context import Kiara, KiaraContextInfo
 from kiara.doc.gen_info_pages import generate_detail_pages
 
-pkg_name = "kiara_plugin.develop"
+pkg_name = "kiara_plugin.{{ cookiecutter.project_slug }}"
 
 kiara: Kiara = Kiara.instance()
 context_info = KiaraContextInfo.create_from_kiara_instance(
