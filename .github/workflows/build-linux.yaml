@@ -26,7 +26,7 @@ jobs:
           python-version: "${{ matrix.python_version }}"
       - uses: actions/checkout@v2
       - name: install kiara_plugin.develop
-        run: pip install -U --pre --extra-index-url https://pypi.fury.io/dharpa/ .[all,dev_testing]
+        run: pip install -U --extra-index-url https://pypi.fury.io/dharpa/ .[all,dev_testing]
       - name: display installed kiara and module package versions
         run: pip list | grep kiara
       - name: Test with pytest
@@ -43,7 +43,7 @@ jobs:
 #          python-version: 3.9
 #      - uses: actions/checkout@v2
 #      - name: install kiara
-#        run: pip install -U --pre --extra-index-url https://pypi.fury.io/dharpa/ .[all,dev_testing]
+#        run: pip install -U --extra-index-url https://pypi.fury.io/dharpa/ .[all,dev_testing]
 #      - name: display installed kiara and module package versions
 #        run: pip list | grep kiara
 #      - name: Run coverage
@@ -66,7 +66,7 @@ jobs:
 #          python-version: "${{ matrix.python_version }}"
 #      - uses: actions/checkout@v2
 #      - name: install kiara_plugin.develop
-#        run: pip install -U --pre --extra-index-url https://pypi.fury.io/dharpa/ .[all,dev_testing]
+#        run: pip install -U --extra-index-url https://pypi.fury.io/dharpa/ .[all,dev_testing]
 #      - name: Test with mypy
 #        run: make mypy
 
@@ -80,7 +80,7 @@ jobs:
 #          python-version: 3.9
 #      - uses: actions/checkout@v2
 #      - name: install kiara_plugin.develop
-#        run: pip install -U --pre --extra-index-url https://pypi.fury.io/dharpa/ .[all,dev_testing]
+#        run: pip install -U --extra-index-url https://pypi.fury.io/dharpa/ .[all,dev_testing]
 #      - name: Test with flake8
 #        run: make flake
 
@@ -101,10 +101,6 @@ jobs:
         with:
           fetch-depth: 0
       - name: install kiara_plugin.develop develop
-        if: ${{ ( github.ref == 'refs/heads/develop') }}
-        run: pip install -U --pre --extra-index-url https://pypi.fury.io/dharpa/ .[all,dev_documentation]
-      - name: install kiara_plugin.develop release
-        if: startsWith(github.ref, 'refs/tags')
         run: pip install -U --extra-index-url https://pypi.fury.io/dharpa/ .[all,dev_documentation]
       - run: git config --global user.email "Markus Binsteiner"
       - run: git config --global user.name "markus@frkl.io"
