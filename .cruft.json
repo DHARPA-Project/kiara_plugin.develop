@@ -1,6 +1,6 @@
 {
   "template": "https://github.com/DHARPA-Project/kiara_plugin.develop.git",
-  "commit": "69ab666f60d2b3fe7b49445630dbd604beeca9f8",
+  "commit": "bc65b1cebed527a9548e7b5dda93526274a9d7f7",
   "context": {
     "cookiecutter": {
       "full_name": "Markus Binsteiner",
