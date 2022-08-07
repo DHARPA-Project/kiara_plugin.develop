@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-from kiara import KiaraModule
 from kiara.models.values.value import ValueMap
-from kiara.modules import ValueSetSchema
+from kiara.modules import KiaraModule, ValueMapSchema
 
 
 class ExampleModule(KiaraModule):
@@ -10,12 +9,12 @@ class ExampleModule(KiaraModule):
 
     def create_input_schema(
         self,
-    ) -> ValueSetSchema:
+    ) -> ValueMapSchema:
         return {"dict": {"type": "dict"}}
 
     def create_outputs_schema(
         self,
-    ) -> ValueSetSchema:
+    ) -> ValueMapSchema:
 
         return {"dict": {"type": "dict"}}
 
