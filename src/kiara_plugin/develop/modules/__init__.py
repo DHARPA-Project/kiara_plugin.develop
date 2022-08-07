@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-from kiara.models.values.value import ValueMap
-from kiara.modules import KiaraModule, ValueMapSchema
+from kiara import KiaraModule, ValueMap, ValueMapSchema
 
 
 class ExampleModule(KiaraModule):
