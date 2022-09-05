@@ -25,6 +25,7 @@ requirements:
     - python
     - kiara>=0.4.4
     - kiara_plugin.core_types>=0.4.2
+    - pydantic-to-typescript>=1.0.9
 about:
   home: https://github.com/DHARPA-Project/kiara_plugin.develop
   license: "Mozilla Public 2.0 (MPL 2.0)"
