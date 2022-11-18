@@ -20,7 +20,7 @@ from kiara.interfaces.python_api.models.info import (
 )
 from kiara.utils.cli import output_format_option, terminal_print, terminal_print_model
 from kiara.utils.graphs import print_ascii_graph
-from pydantic2ts.cli.script import generate_json_schema, remove_master_model_from_output
+from pydantic2ts.cli.script import clean_output_file, generate_json_schema
 
 
 @click.group("dev")
@@ -98,7 +98,7 @@ def print_operation_subcomponents(ctx, operation_id: str, show_data: bool):
 
     kiara_api: KiaraAPI = ctx.obj["kiara_api"]
 
-    operation = kiara_api.get_operation(operation_id=operation_id)
+    operation = kiara_api.get_operation(operation=operation_id)
     tree = operation.create_renderable_tree(show_data=show_data)
     terminal_print(tree)
 
@@ -163,7 +163,7 @@ def create_typescript_models(
 
         os.system(f'{json2ts_cmd} -i {schema_file_path} -o {output} --bannerComment ""')
         shutil.rmtree(schema_dir)
-        remove_master_model_from_output(output)
+        clean_output_file(output)
 
     output_file = Path(output)
     if output_file.exists() and not delete and not append:
@@ -250,7 +250,7 @@ def print_operation_subcomponents_html(ctx, operation_id: str, show_data: bool):
 
     kiara_api: KiaraAPI = ctx.obj["kiara_api"]
 
-    operation = kiara_api.get_operation(operation_id=operation_id)
+    operation = kiara_api.get_operation(operation=operation_id)
 
     html = operation.create_html()
     print(html)

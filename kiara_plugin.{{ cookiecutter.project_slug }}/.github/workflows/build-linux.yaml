@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python_version: ["3.8", "3.9", "3.10"]
+        python_version: ["3.8", "3.9", "3.10", "3.11"]
     steps:
       - name: "Set up Python {% raw %}${{ matrix.python_version }}{% endraw %}"
         uses: actions/setup-python@v2
@@ -156,7 +156,7 @@ jobs:
     if: {% raw %}${{ startsWith(github.ref, 'refs/tags') != true }}{% endraw %}
     strategy:
       matrix:
-        python_version: ["3.8", "3.9"]   # '3.10' currently does not work, missing vaex conda packages
+        python_version: ["3.8", "3.9", "3.10", "3.11"]
     steps:
       - uses: actions/checkout@v1
       - uses: conda-incubator/setup-miniconda@v2
@@ -171,7 +171,7 @@ jobs:
     if: {% raw %}${{ startsWith(github.ref, 'refs/tags') }}{% endraw %}
     strategy:
       matrix:
-        python_version: ["3.8", "3.9"]   # '3.10' currently does not work, missing vaex conda packages
+        python_version: ["3.8", "3.9", "3.10", "3.11"]   # '3.10' currently does not work, missing vaex conda packages
     env:
       ANACONDA_PUSH_TOKEN: {% raw %}${{ secrets.ANACONDA_PUSH_TOKEN }}{% endraw %}
     needs:
