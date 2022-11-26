@@ -1,0 +1,44 @@
+context:
+  name: "{{ pkg_info.pkg_name }}"
+  version: "{{ pkg_info.pkg_version }}"
+
+package:
+  name: {% raw %}"{{ name }}"{% endraw %}
+  version: {% raw %}"{{ version }}"{% endraw %}
+
+source:
+{%- if pkg_info.pkg_url.endswith('.git') %}
+  git_url: "{{ pkg_info.pkg_url }}"
+  git_rev: "{% raw %}{{ version }}{% endraw %}"
+{% elif pkg_info.pkg_url.startswith('file://') %}
+  path: "{{ pkg_info.pkg_url }}"
+{% else %}
+  url: "{{ pkg_info.pkg_url }}"
+  sha256: "{{ pkg_info.pkg_hash }}"
+{% endif %}
+build:
+  number: 0
+  script: 'python -m pip install --no-deps --ignore-installed .'
+
+requirements:
+  host:
+{% for req in pkg_info.host_requirements %}    - {{ req }}
+{% endfor %}
+  run:
+    - python
+{% for req in pkg_info.pkg_requirements %}    - {{ req }}
+{% endfor %}
+
+about:
+  home: {{ pkg_info.metadata.home }}
+  license: {{ pkg_info.metadata.license }}
+{% if pkg_info.metadata.license_family %}  license_family: {{ pkg_info.metadata.license_family }}
+{% endif %}  summary: A set of modules (and pipelines) for kiara.
+{% if pkg_info.metadata.doc_url %}  doc_url: {{ pkg_info.metadata.doc_url }}
+{% endif %}{% if pkg_info.metadata.dev_url %}  dev_url: {{ pkg_info.metadata.dev_url }}
+{% endif %}
+
+extra:
+  recipe-maintainers:
+{% for m in pkg_info.metadata.recipe_maintainers %}    - {{ m }}
+{% endfor %}

@@ -1,0 +1,9 @@
+name: kiara-build
+channels:
+  - conda-forge
+  - dharpa
+  - anaconda
+dependencies:
+  - python ==3.10
+  - mamba
+  - boa

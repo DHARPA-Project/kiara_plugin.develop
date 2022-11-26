@@ -2,7 +2,6 @@
 
 """Top-level package for kiara_plugin.develop."""
 
-
 import os
 
 from kiara.utils.class_loading import (

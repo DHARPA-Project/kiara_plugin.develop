@@ -23,6 +23,7 @@ requirements:
     - setuptools_scm_git_archive
   run:
     - python
+    - httpx>=0.23.0
     - kiara>=0.4.4
     - kiara_plugin.core_types>=0.4.2
     - pydantic-to-typescript>=1.0.9
