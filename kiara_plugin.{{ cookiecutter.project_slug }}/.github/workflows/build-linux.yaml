@@ -153,7 +153,6 @@ jobs:
   conda_package_build:
     name: conda package build (and upload if release)
     runs-on: ubuntu-latest
-    if: {% raw %}${{ startsWith(github.ref, 'refs/tags') != true }}{% endraw %}
     steps:
       - name: "Set up Python 3.9"
         uses: actions/setup-python@v2
