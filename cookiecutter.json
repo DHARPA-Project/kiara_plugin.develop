@@ -5,6 +5,5 @@
     "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_').replace('.', '_') }}",
     "project_short_description": "{{ cookiecutter.project_name }}",
     "github_user": "DHARPA-Project",
-    "anaconda_user": "dharpa",
-    "_extensions": ["cookiecutter.extensions.JsonifyExtension"]
+    "anaconda_user": "dharpa"
 }
