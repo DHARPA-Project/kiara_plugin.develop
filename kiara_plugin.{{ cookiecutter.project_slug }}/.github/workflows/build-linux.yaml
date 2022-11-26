@@ -153,7 +153,7 @@ jobs:
   conda_package_build:
     name: conda package build (and upload if release)
     runs-on: ubuntu-latest
-    if: ${{ startsWith(github.ref, 'refs/tags') != true }}
+    if: {% raw %}${{ startsWith(github.ref, 'refs/tags') != true }}{% endraw %}
     steps:
       - name: "Set up Python 3.9"
         uses: actions/setup-python@v2
@@ -164,7 +164,7 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/setup.*') }}
+          key: {% raw %}${{ runner.os }}-pip-${{ hashFiles('**/setup.*') }}{% endraw %}
       - uses: actions/checkout@v2
       - name: install required plugin packages
         run: pip install -U --pre --extra-index-url https://pypi.fury.io/dharpa/ kiara_plugin.develop
