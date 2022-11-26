@@ -14,9 +14,7 @@ from typing import Any, Dict, List, Mapping, Union
 
 from kiara.utils.cli import terminal_print
 
-from kiara_plugin.develop.defaults import (
-    KIARA_DEV_MICROMAMBA_TARGET_PREFIX,
-)
+from kiara_plugin.develop.defaults import KIARA_DEV_MICROMAMBA_TARGET_PREFIX
 
 
 class State(abc.ABC):
