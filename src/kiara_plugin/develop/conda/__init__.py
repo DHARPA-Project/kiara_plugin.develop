@@ -193,7 +193,7 @@ class CondaEnvMgmt(object):
         anaconda_bin = os.path.join(prefix, env_name, "bin", "anaconda")
 
         if token is None:
-            token = os.environ.get("ANACONDA_PUSH_TOKEN")
+            token = os.getenv("ANACONDA_PUSH_TOKEN")
             if not token:
                 raise Exception("Can't upload package, no api token provided.")
 
@@ -364,16 +364,17 @@ class CondaEnvMgmt(object):
         return pkg_metadata
 
     def get_pkg_metadata(
-        self, pkg: str, version: Union[str, None, int, float] = None
+        self, pkg: str, version: Union[str, None, int, float] = None, force_version: bool=False
     ) -> Mapping[str, Any]:
 
         path = os.path.realpath(os.path.expanduser(pkg))
         if os.path.isdir(path):
             if version:
-                raise Exception(
-                    "Specified project is a local folder, using 'version' with this does not make sense."
-                )
-            pkg_metadata = self.get_pkg_metadata_from_project_folder(path)
+                if not force_version:
+                    raise Exception(
+                        "Specified project is a local folder, using 'version' with this does not make sense. Use the 'force_version' argument if necessary."
+                    )
+            pkg_metadata = self.get_pkg_metadata_from_project_folder(path, force_version=version)
 
         else:
             pkg_metadata = self.get_pkg_metadata_from_pypi(
@@ -397,7 +398,7 @@ class CondaEnvMgmt(object):
         return _result
 
     def get_pkg_metadata_from_project_folder(
-        self, project_path: str
+        self, project_path: str, force_version: Union[str, None]=None
     ) -> Mapping[str, Any]:
 
         build_env_details = self.get_state_details("conda-build-env")
@@ -437,6 +438,9 @@ class CondaEnvMgmt(object):
                 result["name"] = result["name"].replace("-", "_", 1)
 
         assert "releases" not in result.keys()
+
+        if force_version:
+            result["version"] = force_version
         version = result["version"]
         result["releases"] = {}
         result["releases"][version] = [
