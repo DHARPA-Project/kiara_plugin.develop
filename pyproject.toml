@@ -6,6 +6,57 @@ requires = [
 ]
 build-backend = 'setuptools.build_meta'
 
+[project]
+name = "kiara_plugin.develop"
+description = "Development utilities for kiara."
+authors = [
+    {name = "Markus Binsteiner", email = "markus@frkl.io"}
+]
+readme = "README.md"
+requires-python = ">=3.8"
+keywords = ["kiara"]
+license = {text = "MPL-2.0"}
+classifiers = [
+    "Framework :: Django",
+    "Programming Language :: Python :: 3",
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11"
+]
+dependencies = [
+    "kiara>=0.4.22",
+    "kiara_plugin.core_types>=0.4.12",
+    "diskcache>=5.4.0",
+    "httpx>=0.23.0",
+    "pydantic-to-typescript>=1.0.9"
+]
+dynamic = ["version"]
+
+[project.optional-dependencies]
+dev_documentation = [
+    "kiara[dev_documentation]"
+]
+dev_testing = [
+    "kiara[dev_testing]"
+]
+dev_utils = [
+    "kiara[dev_utils]"
+]
+dev_all = [
+    "kiara[dev_all]"
+]
+
+[project.urls]
+homepage = "https://github.com/DHARPA-Project/kiara_plugin.develop"
+documentation = "https://DHARPA-Project.github.io/kiara_plugin.develop"
+repository = "https://github.com/DHARPA-Project/kiara_plugin.develop"
+
 [tool.black]
 include = '\.pyi?$'
 exclude = '''

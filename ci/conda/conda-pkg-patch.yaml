@@ -1,0 +1,19 @@
+channels:
+  - conda-forge
+  - dharpa
+
+host_requirements:
+  - pip
+  - python
+  - setuptools<=63
+  - setuptools_scm
+  - setuptools_scm_git_archive
+
+test:
+  imports:
+    - kiara_plugin.develop
+  source_files:
+    - tests
+    - examples
+  commands:
+    - kiara module list
