@@ -307,8 +307,6 @@ class CondaEnvMgmt(object):
             "test": test_spec,
         }
 
-        dbg(pkg_metadata)
-
         return PkgSpec(**spec_data)
 
     def install_package_with_pip(
@@ -373,7 +371,10 @@ class CondaEnvMgmt(object):
         return pkg_metadata
 
     def get_pkg_metadata(
-        self, pkg: str, version: Union[str, None, int, float] = None, force_version: bool=False
+        self,
+        pkg: str,
+        version: Union[str, None, int, float] = None,
+        force_version: bool = False,
     ) -> Mapping[str, Any]:
 
         path = os.path.realpath(os.path.expanduser(pkg))
@@ -383,7 +384,9 @@ class CondaEnvMgmt(object):
                     raise Exception(
                         "Specified project is a local folder, using 'version' with this does not make sense. Use the 'force_version' argument if necessary."
                     )
-            pkg_metadata = self.get_pkg_metadata_from_project_folder(path, force_version=version)
+            pkg_metadata = self.get_pkg_metadata_from_project_folder(
+                path, force_version=version
+            )
 
         else:
             pkg_metadata = self.get_pkg_metadata_from_pypi(
@@ -407,7 +410,7 @@ class CondaEnvMgmt(object):
         return _result
 
     def get_pkg_metadata_from_project_folder(
-        self, project_path: str, force_version: Union[str, None]=None
+        self, project_path: str, force_version: Union[str, None] = None
     ) -> Mapping[str, Any]:
 
         build_env_details = self.get_state_details("conda-build-env")
