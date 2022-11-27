@@ -85,7 +85,9 @@ def build_package_from_spec(
     "--output", "-o", help="Write to the specified file instead of printing to stdout."
 )
 @click.option("--force", help="Overwrite existing file.", is_flag=True)
-@click.option("--force-version", help="Overwrite the Python package version number.", is_flag=True)
+@click.option(
+    "--force-version", help="Overwrite the Python package version number.", is_flag=True
+)
 @click.option(
     "--patch-data", "-p", help="A file to patch the auto-generated spec with."
 )
@@ -113,7 +115,9 @@ def build_package_spec(
     if patch_data:
         _patch_data = get_data_from_file(patch_data)
 
-    pkg_metadata = conda_mgmt.get_pkg_metadata(pkg=pkg, version=version, force_version=force_version)
+    pkg_metadata = conda_mgmt.get_pkg_metadata(
+        pkg=pkg, version=version, force_version=force_version
+    )
 
     spec = conda_mgmt.create_pkg_spec(pkg_metadata=pkg_metadata, patch_data=_patch_data)
     if format == "raw":
@@ -164,7 +168,9 @@ def build_package_spec(
     help="If publishing is enabled, use this token to authenticate.",
     required=False,
 )
-@click.option("--force-version", help="Overwrite the Python package version number.", is_flag=True)
+@click.option(
+    "--force-version", help="Overwrite the Python package version number.", is_flag=True
+)
 @click.pass_context
 def build_package(
     ctx,
@@ -174,7 +180,7 @@ def build_package(
     user: Union[str, None] = None,
     token: Union[str, None] = None,
     patch_data: Union[str, None] = None,
-    force_version: bool = False
+    force_version: bool = False,
 ):
     """Create a conda environment."""
 
@@ -191,7 +197,9 @@ def build_package(
     if patch_data:
         _patch_data = get_data_from_file(patch_data)
 
-    metadata = conda_mgmt.get_pkg_metadata(pkg=pkg, version=version, force_version=force_version)
+    metadata = conda_mgmt.get_pkg_metadata(
+        pkg=pkg, version=version, force_version=force_version
+    )
     pkg = conda_mgmt.create_pkg_spec(pkg_metadata=metadata, patch_data=_patch_data)
 
     terminal_print()
