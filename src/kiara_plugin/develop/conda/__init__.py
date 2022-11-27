@@ -553,4 +553,11 @@ class CondaEnvMgmt(object):
                     continue
                 filtered_reqs[k] = v
 
-        return {k: filtered_reqs[k] for k in sorted(filtered_reqs)}
+        fixed = {}
+        for k in sorted(filtered_reqs.keys()):
+            if k.startswith("kiara-plugin"):
+                fixed[k.replace("-", "_")] = filtered_reqs[k]
+            else:
+                fixed[k] = filtered_reqs[k]
+
+        return fixed
