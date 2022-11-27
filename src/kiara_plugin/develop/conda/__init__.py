@@ -283,6 +283,13 @@ class CondaEnvMgmt(object):
         else:
             test_spec = {}
 
+        home_page = pkg_metadata.get("home_page", None)
+        if not home_page:
+            for url in pkg_metadata.get("project_url", []):
+                if url.startswith("homepage, "):
+                    home_page = url[10:]
+                    break
+
         spec_data = {
             "pkg_name": pkg_name,
             "pkg_version": pkg_metadata["version"],
@@ -292,13 +299,15 @@ class CondaEnvMgmt(object):
             "pkg_requirements": pkg_requirements,
             "pkg_channels": pkg_channels,
             "metadata": {
-                "home": pkg_metadata.get("home_page"),
+                "home": home_page,
                 "license": pkg_metadata.get("license"),
                 "summary": pkg_metadata.get("summary"),
                 "recipe_maintainers": recipe_maintainers,
             },
             "test": test_spec,
         }
+
+        dbg(pkg_metadata)
 
         return PkgSpec(**spec_data)
 

@@ -24,4 +24,4 @@ exclude = '''
 '''
 
 [tool.setuptools_scm]
-write_to = "src/kiara/version.txt"
+write_to = "src/kiara_plugin/develop/version.txt"
