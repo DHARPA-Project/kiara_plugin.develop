@@ -52,7 +52,7 @@ class CondaEnvMgmt(object):
         )
         channels = ["conda-forge", "dharpa", "anaconda"]
         # deps = [f"python=={DEFAULT_PYTHON_VERSION}", "boa", "mamba", "anaconda"]
-        deps = [f"python==3.9", "boa", "mamba", "anaconda", "setuptools_scm>=7.0.0"]
+        deps = [f"python==3.9", "boa", "mamba", "anaconda", "conda-verify"]
         conda_build_env = MambaEnvironment(
             "conda-build-env",
             env_name="conda-build-env",
@@ -251,19 +251,27 @@ class CondaEnvMgmt(object):
         pkg_hash = None
         pkg_url = None
         for v in version_data:
-            if v["packagetype"] == "sdist":
-                pkg_hash = v["digests"]["sha256"]
+            if v["packagetype"] == "project_folder":
+                pkg_hash = None
                 pkg_url = v["url"]
                 break
 
         if pkg_hash is None:
             for v in version_data:
-                if v["packagetype"] == "project_folder":
-                    pkg_hash = None
+                if v["packagetype"] == "sdist":
+                    pkg_hash = v["digests"]["sha256"]
                     pkg_url = v["url"]
                     break
 
+        if pkg_hash is None:
+            for v in version_data:
+                if v["packagetype"] == "bdist_wheel":
+                    # TODO: make sure it's a universal wheel
+                    pkg_hash = v["digests"]["sha256"]
+                    pkg_url = v["url"]
+
         if pkg_url is None:
+            dbg(version_data)
             raise Exception(f"Could not find hash for package: {pkg_name}.")
 
         pkg_requirements = req_list
@@ -367,6 +375,11 @@ class CondaEnvMgmt(object):
             url = f"https://pypi.org/pypi/{pkg_name}/json"
 
         result = httpx.get(url)
+
+        if result.status_code >= 300:
+            raise Exception(
+                f"Could not retrieve information for package '{pkg_name}': {result.text}"
+            )
         pkg_metadata = result.json()
         return pkg_metadata
 
