@@ -40,7 +40,7 @@ dynamic = ["version"]
 
 [project.optional-dependencies]
 dev_documentation = [
-    "kiara[dev_documentation]"
+    "kiara[dev_documentation]",
 ]
 dev_testing = [
     "kiara[dev_testing]"

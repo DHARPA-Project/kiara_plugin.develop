@@ -1,20 +1,9 @@
-# [**kiara**](https://dharpa.org/kiara.documentation) plugin: develop
+# Development helpers for [*kiara*](https://github.com/DHARPA-project/kiara)
 
-This package contains a set of commonly used/useful modules, pipelines, types and metadata schemas for [*Kiara*](https://github.com/DHARPA-project/kiara).
+This package contains documentation as well as set of helper utilities and terminal sub-commands that help develop on *kiara* itself, as well as *kiara* plugins in general.
 
-## Description
 
-Development utilities for kiara.
 
-## Package content
-
-{% for item_type, item_group in get_context_info().get_all_info().items() %}
-
-### {{ item_type }}
-{% for item, details in item_group.item_infos.items() %}
-- [`{{ item }}`][kiara_info.{{ item_type }}.{{ item }}]: {{ details.documentation.description }}
-{% endfor %}
-{% endfor %}
 
 ## Links
 
