@@ -51,3 +51,5 @@ This depends on your IDE, obviously. I use PyCharm, so what I do usually is:
   - select your newly created base folder as project root directory
   - select my conda/virtualenv as 'existing' Python environment
 - now, go through all sub-projects, individually, and mark the `src` folder as 'Sources Root' (right-click on the folder, select 'Mark Directory as' -> 'Sources Root'), and `tests` as 'Tests Sources Root"
+
+Adapt to your needs, of course.
