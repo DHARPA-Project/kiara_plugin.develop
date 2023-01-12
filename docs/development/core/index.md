@@ -52,4 +52,7 @@ This depends on your IDE, obviously. I use PyCharm, so what I do usually is:
   - select my conda/virtualenv as 'existing' Python environment
 - now, go through all sub-projects, individually, and mark the `src` folder as 'Sources Root' (right-click on the folder, select 'Mark Directory as' -> 'Sources Root'), and `tests` as 'Tests Sources Root"
 
-Adapt to your needs, of course.
+I chose this setup instead of a monorepo because it makes it easier to release plugin packages independently of core *kiara*, as well as other plugin packages they might depend on. It makes setting up a development environment a bit harder (which is usually a one-time thing),
+and it requires to do git commits/pushes/pulls independently for each sub-project, but so far the trade-off has been worth it.
+
+Personally, I use [mu-repo](https://fabioz.github.io/mu-repo/) to manage multiple repositories like this, and it helps a bit cutting down in management tasks, I know there are other tools out there like this.
