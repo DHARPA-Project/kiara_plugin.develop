@@ -25,8 +25,29 @@ Then there are the more frontend focussed projects:
 
 ### Script
 
-I've written a script to partly automate the process:
+I've written [a script](https://github.com/DHARPA-Project/kiara_plugin.develop/blob/main/scripts/development/install_dev_env.sh) to partly automate the process:
 
+<div style='max-height:300px;overflow:auto'>
+```bash
 --8<--
-scripts/development/install_dev_env.sh
+../scripts/development/install_dev_env.sh
 --8<--
+```
+</div>
+
+Feel free to adapt it to your needs (for example, fork the repos you are in on Github, and change the `GITHUB_USER` variable to your own), and run it locally (on Linux or MacOS). You can start of with disabling most project repositories, and uncomment/add them later on, as needed, and re-run.
+
+Before you run this script, make sure you have a virtualenv (or conda env) activated, otherwise the packages would be installed into your gloabl Python environment.
+
+
+## IDE setup
+
+This depends on your IDE, obviously. I use PyCharm, so what I do usually is:
+
+- create a conda environment, activate it
+- create the project base directory, `cd` into it
+- run the checkout script above
+- open PyCharm, and create a new project:
+  - select your newly created base folder as project root directory
+  - select my conda/virtualenv as 'existing' Python environment
+- now, go through all sub-projects, individually, and mark the `src` folder as 'Sources Root' (right-click on the folder, select 'Mark Directory as' -> 'Sources Root'), and `tests` as 'Tests Sources Root"
