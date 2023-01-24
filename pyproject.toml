@@ -30,8 +30,8 @@ classifiers = [
     "Programming Language :: Python :: 3.11"
 ]
 dependencies = [
-    "kiara>=0.4.22",
-    "kiara_plugin.core_types>=0.4.12",
+    "kiara>=0.4.29",
+    "kiara_plugin.core_types>=0.4.13",
     "diskcache>=5.4.0",
     "httpx>=0.23.0",
     "pydantic-to-typescript>=1.0.9"
@@ -53,6 +53,28 @@ dev_utils = [
 dev_all = [
     "kiara[dev_all]"
 ]
+
+[project.entry-points."kiara.plugin"]
+develop = "kiara_plugin.develop"
+
+[project.entry-points."kiara.cli_subcommands"]
+debug = "kiara_plugin.develop.interfaces.cli.debug:debug"
+dev = "kiara_plugin.develop.interfaces.cli.dev:dev_group"
+conda = "kiara_plugin.develop.interfaces.cli.conda:conda"
+
+
+[project.entry-points."kiara.data_types"]
+develop = "kiara_plugin.develop:find_data_types"
+
+[project.entry-points."kiara.model_classes"]
+develop = "kiara_plugin.develop:find_model_classes"
+
+[project.entry-points."kiara.modules"]
+develop = "kiara_plugin.develop:find_modules"
+
+[project.entry-points."kiara.pipelines"]
+develop = "kiara_plugin.develop:find_pipelines"
+
 
 [project.urls]
 homepage = "https://github.com/DHARPA-Project/kiara_plugin.develop"
