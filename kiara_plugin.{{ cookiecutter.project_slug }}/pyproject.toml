@@ -51,6 +51,19 @@ dev_all = [
     "kiara[dev_all]"
 ]
 
+[project.entry-points."kiara.data_types"]
+{{ cookiecutter.project_slug }} = "kiara_plugin.{{ cookiecutter.project_slug }}:find_data_types"
+
+[project.entry-points."kiara.model_classes"]
+{{ cookiecutter.project_slug }} = "kiara_plugin.{{ cookiecutter.project_slug }}:find_model_classes"
+
+[project.entry-points."kiara.modules"]
+{{ cookiecutter.project_slug }} = "kiara_plugin.{{ cookiecutter.project_slug }}:find_modules"
+
+[project.entry-points."kiara.pipelines"]
+{{ cookiecutter.project_slug }} = "kiara_plugin.{{ cookiecutter.project_slug }}:find_pipelines"
+
+
 [project.urls]
 homepage = "https://github.com/{{ cookiecutter.github_user }}/kiara_plugin.{{ cookiecutter.project_slug }}"
 documentation = "https://{{ cookiecutter.github_user }}.github.io/kiara_plugin.{{ cookiecutter.project_slug }}"
