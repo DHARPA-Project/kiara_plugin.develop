@@ -51,6 +51,9 @@ dev_all = [
     "kiara[dev_all]"
 ]
 
+[project.entry-points."kiara.plugin"]
+{{ cookiecutter.project_splug }} = "kiara_plugin.{{ cookiecutter.project_slug }}"
+
 [project.entry-points."kiara.data_types"]
 {{ cookiecutter.project_slug }} = "kiara_plugin.{{ cookiecutter.project_slug }}:find_data_types"
 
