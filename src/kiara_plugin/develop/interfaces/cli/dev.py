@@ -5,22 +5,18 @@
 #  Mozilla Public License, version 2.0 (see LICENSE or https://www.mozilla.org/en-US/MPL/2.0/)
 import os
 import os.path
-import shutil
 import sys
 from pathlib import Path
-from tempfile import mkdtemp
-from typing import Any, List, Tuple
+from typing import Tuple
 
 import rich_click as click
 from kiara import KiaraAPI
 from kiara.context import Kiara
-from kiara.interfaces.python_api.models.info import (
-    KiaraModelClassesInfo,
-    KiaraModelTypeInfo,
-)
+from kiara.interfaces.python_api.models.info import KiaraModelTypeInfo
 from kiara.utils.cli import output_format_option, terminal_print, terminal_print_model
 from kiara.utils.graphs import print_ascii_graph
-from pydantic2ts.cli.script import clean_output_file, generate_json_schema
+
+from kiara_plugin.develop.schema.javascript import TypeScriptModelExporter
 
 
 @click.group("dev")
@@ -117,123 +113,38 @@ def html(ctx):
     help="If using filters, compare the filters against the full Python path (incl. module path), not just the class name.",
     is_flag=True,
 )
-@click.option("--output", "-o", help="The file to write the output", required=True)
-@click.option("--delete", "-d", help="Delete file if exists.", is_flag=True)
-@click.option("--append", "-a", help="Append to file if exists.", is_flag=True)
+@click.option("--output", "-o", help="The file to write the output", required=False)
+@click.option("--force", "-f", help="Overwrite existing file(s)..", is_flag=True)
 @click.pass_context
 def create_typescript_models(
     ctx,
     filter: Tuple[str],
     check_module_name: bool,
     output: str,
-    delete: bool,
-    append: bool,
+    force: bool,
 ):
     """Create typescript models"""
 
-    def generate_typescript_defs(
-        models: List[Any],
-        output: str,
-        exclude: Tuple[str, ...] = (),
-        json2ts_cmd: str = "json2ts",
-    ) -> None:
-        """
-        Convert the pydantic models in a python module into typescript interfaces.
+    kiara = ctx.obj["kiara"]
+    exporter = TypeScriptModelExporter(kiara=kiara)
 
-        :param models: the models
-        :param output: file that the typescript definitions will be written to
-        :param exclude: optional, a tuple of names for pydantic models which should be omitted from the typescript output.
-        :param json2ts_cmd: optional, the command that will execute json2ts. Use this if it's installed in a strange spot.
-        """
-        if not shutil.which(json2ts_cmd):
-            raise Exception(
-                "json2ts must be installed. Instructions can be found here: "
-                "https://www.npmjs.com/package/json-schema-to-typescript"
+    if output is None:
+        output = os.path.join(os.getcwd(), "kiara_models.ts")
+
+    _output = Path(output)
+    if _output.exists():
+        _output = _output / "kiara_models.ts"
+
+    if _output.exists():
+        if not force:
+            terminal_print()
+            terminal_print(
+                f"Output file '{_output.as_posix()}' already exists: {_output} and '--force' not specified."
             )
+            sys.exit(1)
 
-        if exclude:
-            models = [m for m in models if m.__name__ not in exclude]
-
-        schema = generate_json_schema(models)
-        schema_dir = mkdtemp()
-        schema_file_path = os.path.join(schema_dir, "schema.json")
-
-        with open(schema_file_path, "w") as f:
-            f.write(schema)
-
-        os.system(f'{json2ts_cmd} -i {schema_file_path} -o {output} --bannerComment ""')
-        shutil.rmtree(schema_dir)
-        clean_output_file(output)
-
-    output_file = Path(output)
-    if output_file.exists() and not delete and not append:
-        terminal_print()
-        terminal_print(
-            f"File '{output}' exists, and neither 'force' nor 'append' specified. Doing nothing..."
-        )
-        sys.exit(1)
-
-    kiara: Kiara = ctx.obj["kiara"]
-
-    final_filters: List[str] = []
-    for f in filter:
-        if os.path.isfile(os.path.realpath(f)):
-            lines = Path(f).read_text().splitlines()
-            final_filters.extend((line.strip() for line in lines))
-        else:
-            final_filters.append(f.strip())
-
-    all_models = kiara.kiara_model_registry.all_models
-    if filter:
-        _temp = {}
-        for model_id, model_cls in all_models.item_infos.items():
-            match = False
-            for f in final_filters:
-                if check_module_name:
-                    token = model_cls.python_class.full_name
-                else:
-                    token = model_cls.python_class.python_class_name
-                if f.lower() in token.lower() or f.lower() in token.lower():
-                    match = True
-                    break
-            if match:
-                _temp[model_id] = model_cls
-        all_models = KiaraModelClassesInfo(
-            group_title="Filtered models", item_infos=_temp
-        )
-
-    if not all_models:
-        terminal_print()
-        terminal_print("No matching models found. Doing nothing...")
-        sys.exit(1)
-
-    model_infos: List[KiaraModelTypeInfo] = list(all_models.item_infos.values())
-
-    terminal_print()
-    terminal_print("Exporting models:")
-    terminal_print_model(all_models)
-    terminal_print()
-    models = [m.python_class.get_class() for m in model_infos]
-
-    # temp = tempfile.NamedTemporaryFile(suffix='_temp', prefix='kiara_model_gen_')
-    if output_file.exists() and delete:
-        os.unlink(output_file)
-    generate_typescript_defs(models, output=output_file.as_posix())
-
-    # all_content = []
-    # all_model_paths = set()
-    # for model in models:
-    #     model_path = model.python_class.get_python_module().__file__
-    #     all_model_paths.add(model_path)
-    #
-    # for model_path in all_model_paths:
-    #     temp = tempfile.NamedTemporaryFile(suffix='_temp', prefix='kiara_model_gen_')
-    #     generate_typescript_defs(module=model_path, output=temp.name)
-    #     all_content.append(Path(temp.name).read_text())
-    #     temp.close()
-    # with output_file.open(mode='ta') as f:
-    #     for c in all_content:
-    #         f.write(c + "\n\n")
+    translated = exporter.translate(filters=filter)
+    _output.write_text(translated["kiara_models.ts"])
 
 
 @html.command("operation")
