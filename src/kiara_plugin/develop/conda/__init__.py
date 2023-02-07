@@ -380,6 +380,7 @@ class CondaEnvMgmt(object):
             raise Exception(
                 f"Could not retrieve information for package '{pkg_name}': {result.text}"
             )
+
         pkg_metadata = result.json()
         return pkg_metadata
 

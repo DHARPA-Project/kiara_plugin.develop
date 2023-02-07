@@ -36,7 +36,7 @@ about:
   home: {{ pkg_info.metadata.home }}
   license: {{ pkg_info.metadata.license }}
 {% if pkg_info.metadata.license_family %}  license_family: {{ pkg_info.metadata.license_family }}
-{% endif %}  summary: A set of modules (and pipelines) for kiara.
+{% endif %}  summary: {{  pkg_info.metadata.summary }}
 {% if pkg_info.metadata.doc_url %}  doc_url: {{ pkg_info.metadata.doc_url }}
 {% endif %}{% if pkg_info.metadata.dev_url %}  dev_url: {{ pkg_info.metadata.dev_url }}
 {% endif %}

@@ -41,13 +41,9 @@ dev_documentation = [
 ]
 dev_testing = [
     "kiara[dev_testing]",
-    "types-setuptools",
-    "sqlalchemy-stubs",
-    "ruff>=0.0.237"
 ]
 dev_utils = [
     "kiara[dev_utils]",
-    "ruff>=0.0.237"
 ]
 dev_all = [
     "kiara[dev_all]"
@@ -125,8 +121,7 @@ select = [
     "PLW",
     "PIE",
 ]
-#select = ["E", "F", "RUF100", "W", "I001"]
-ignore = ["E501", "S101", "SIM118", "SIM108", "PLR2004"]
+ignore = ["E501", "S101", "SIM118", "SIM108", "PLR2004", "PLR0913", "S110"]
 
 fix = true
 fixable = ["E", "F", "RUF100", "I001", "Q"]
