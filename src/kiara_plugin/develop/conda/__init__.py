@@ -52,7 +52,7 @@ class CondaEnvMgmt(object):
         )
         channels = ["conda-forge", "dharpa", "anaconda"]
         # deps = [f"python=={DEFAULT_PYTHON_VERSION}", "boa", "mamba", "anaconda"]
-        deps = [f"python==3.9", "boa", "mamba", "anaconda", "conda-verify"]
+        deps = [f"python==3.9", "boa", "mamba", "anaconda-client", "conda-verify"]
         conda_build_env = MambaEnvironment(
             "conda-build-env",
             env_name="conda-build-env",
