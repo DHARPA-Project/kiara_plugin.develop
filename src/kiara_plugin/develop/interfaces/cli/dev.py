@@ -4,18 +4,15 @@
 #
 #  Mozilla Public License, version 2.0 (see LICENSE or https://www.mozilla.org/en-US/MPL/2.0/)
 import sys
+import typing
 from pathlib import Path
 from typing import Tuple, Union
 
 import rich_click as click
-from kiara import KiaraAPI
-from kiara.context import Kiara
-from kiara.interfaces.python_api.models.info import KiaraModelTypeInfo
 from kiara.utils.cli import output_format_option, terminal_print, terminal_print_model
-from kiara.utils.graphs import print_ascii_graph
 
-from kiara_plugin.develop.schema.flatbuffers import FlatbuffersSchemaExporter
-from kiara_plugin.develop.schema.javascript import TypeScriptModelExporter
+if typing.TYPE_CHECKING:
+    from kiara.api import Kiara, KiaraAPI
 
 
 @click.group("dev")
@@ -41,7 +38,7 @@ def model(ctx):
 @click.pass_context
 def list_models(ctx, full_doc: bool, format: str):
 
-    kiara: Kiara = ctx.obj["kiara"]
+    kiara: Kiara = ctx.obj.kiara
 
     registry = kiara.kiara_model_registry
     title = "All models"
@@ -59,7 +56,9 @@ def list_models(ctx, full_doc: bool, format: str):
 def explain_module_type(ctx, model_type_id: str, format: str, schema: bool):
     """Print details of a model type."""
 
-    kiara: Kiara = ctx.obj["kiara"]
+    from kiara.interfaces.python_api.models.info import KiaraModelTypeInfo
+
+    kiara: Kiara = ctx.obj.kiara
     model_cls = kiara.kiara_model_registry.get_model_cls(kiara_model_id=model_type_id)
     info = KiaraModelTypeInfo.create_from_type_class(type_cls=model_cls, kiara=kiara)
 
@@ -91,7 +90,7 @@ def subcomponents(ctx):
 def print_operation_subcomponents(ctx, operation_id: str, show_data: bool):
     """Print the tree of a models subcomponents."""
 
-    kiara_api: KiaraAPI = ctx.obj["kiara_api"]
+    kiara_api: KiaraAPI = ctx.obj.kiara_api
 
     operation = kiara_api.get_operation(operation=operation_id)
     tree = operation.create_renderable_tree(show_data=show_data)
@@ -122,7 +121,9 @@ def render_typescript(
 ):
     """Create typescript models"""
 
-    kiara = ctx.obj["kiara"]
+    from kiara_plugin.develop.schema.javascript import TypeScriptModelExporter
+
+    kiara = ctx.obj.kiara
     exporter = TypeScriptModelExporter(kiara=kiara)
 
     _output: Union[None, Path] = None
@@ -165,7 +166,9 @@ def render_flatbuffers(
 ):
     """Create flatbuffer schemas."""
 
-    kiara = ctx.obj["kiara"]
+    from kiara_plugin.develop.schema.flatbuffers import FlatbuffersSchemaExporter
+
+    kiara = ctx.obj.kiara
     exporter = FlatbuffersSchemaExporter(kiara=kiara)
 
     _output: Union[None, Path] = None
@@ -212,7 +215,7 @@ def html(ctx):
 def print_operation_subcomponents_html(ctx, operation_id: str, show_data: bool):
     """Print the tree of a models subcomponents."""
 
-    kiara_api: KiaraAPI = ctx.obj["kiara_api"]
+    kiara_api: KiaraAPI = ctx.obj.kiara_api
 
     operation = kiara_api.get_operation(operation=operation_id)
 
@@ -226,7 +229,9 @@ def print_operation_subcomponents_html(ctx, operation_id: str, show_data: bool):
 def lineage_graph(ctx, value: str):
     """ "Print the lineage of a value as graph."""
 
-    kiara_api: KiaraAPI = ctx.obj["kiara_api"]
+    from kiara.utils.graphs import print_ascii_graph
+
+    kiara_api: KiaraAPI = ctx.obj.kiara_api
 
     _value = kiara_api.get_value(value)
     graph = _value.lineage.full_graph

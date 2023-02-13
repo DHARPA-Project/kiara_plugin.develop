@@ -1,14 +1,17 @@
 # -*- coding: utf-8 -*-
+import typing
+
+import rich_click as click
+from kiara.utils.cli import terminal_print_model
+from rich.table import Table
 
 #  Copyright (c) 2021, Markus Binsteiner
 #
 #  Mozilla Public License, version 2.0 (see LICENSE or https://www.mozilla.org/en-US/MPL/2.0/)
 
 
-import rich_click as click
-from kiara.context import Kiara
-from kiara.utils.cli import terminal_print_model
-from rich.table import Table
+if typing.TYPE_CHECKING:
+    from kiara.api import Kiara
 
 
 @click.group("debug")
@@ -22,7 +25,7 @@ def debug(ctx):
 def print_jobs(ctx):
     """Print stored jobs."""
 
-    kiara: Kiara = ctx.obj["kiara"]
+    kiara: Kiara = ctx.obj.kiara
 
     all_records = kiara.job_registry.retrieve_all_job_records()
 
@@ -34,7 +37,7 @@ def print_jobs(ctx):
 def print_workflows(ctx):
     """Print stored workflows."""
 
-    kiara: Kiara = ctx.obj["kiara"]
+    kiara: Kiara = ctx.obj.kiara
 
     workflow_aliases = kiara.workflow_registry.workflow_aliases.keys()
 

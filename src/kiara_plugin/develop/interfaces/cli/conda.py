@@ -1,30 +1,27 @@
 # -*- coding: utf-8 -*-
-import os
-import sys
-from pathlib import Path
-from typing import Union
-
-import orjson
-import rich_click as click
-from kiara.utils.cli import terminal_print
-from kiara.utils.files import get_data_from_file
-from kiara.utils.json import orjson_dumps
-from rich.syntax import Syntax
-
-from kiara_plugin.develop.conda import CondaEnvMgmt
-from kiara_plugin.develop.conda.models import PkgSpec
 
 #  Copyright (c) 2021, Markus Binsteiner
 #
 #  Mozilla Public License, version 2.0 (see LICENSE or https://www.mozilla.org/en-US/MPL/2.0/)
 
 
+import os
+import sys
+import typing
+from pathlib import Path
+from typing import Union
+
+import rich_click as click
+from kiara.utils.cli import terminal_print
+
+if typing.TYPE_CHECKING:
+    from kiara_plugin.develop.conda import CondaEnvMgmt
+
+
 @click.group("conda")
 @click.pass_context
 def conda(ctx):
     """Conda environment related sub-commands."""
-
-    ctx.obj["conda_mgmt"] = CondaEnvMgmt()
 
 
 @conda.command()
@@ -61,7 +58,12 @@ def build_package_from_spec(
                 "Package publishing enabled, but no token provided. Either use the '--token' cli option or populate the 'ANACONDA_PUSH_TOKEN' environment variable."
             )
             sys.exit(1)
-    conda_mgmt: CondaEnvMgmt = ctx.obj["conda_mgmt"]
+
+    from kiara.utils.files import get_data_from_file
+
+    from kiara_plugin.develop.conda import PkgSpec
+
+    conda_mgmt: CondaEnvMgmt = CondaEnvMgmt()
 
     recipe_data = get_data_from_file(pkg_spec)
     pkg = PkgSpec(**recipe_data)
@@ -104,15 +106,22 @@ def build_package_spec(
 ):
     """Create a conda package spec file."""
 
+    import orjson
+    from kiara.utils.json import orjson_dumps
+    from rich.syntax import Syntax
+
     if output:
         o = Path(output)
         if o.exists() and not force:
             terminal_print()
             terminal_print(f"Output path already exists: {output}. Doing nothing...")
 
-    conda_mgmt: CondaEnvMgmt = ctx.obj["conda_mgmt"]
+    conda_mgmt: CondaEnvMgmt = CondaEnvMgmt()
+
     _patch_data = None
     if patch_data:
+        from kiara.utils.files import get_data_from_file
+
         _patch_data = get_data_from_file(patch_data)
 
     pkg_metadata = conda_mgmt.get_pkg_metadata(
@@ -192,9 +201,12 @@ def build_package(
             )
             sys.exit(1)
 
-    conda_mgmt: CondaEnvMgmt = ctx.obj["conda_mgmt"]
+    conda_mgmt: CondaEnvMgmt = CondaEnvMgmt()
+
     _patch_data = None
     if patch_data:
+        from kiara.utils.files import get_data_from_file
+
         _patch_data = get_data_from_file(patch_data)
 
     metadata = conda_mgmt.get_pkg_metadata(
@@ -212,4 +224,4 @@ def build_package(
     if publish:
         conda_mgmt.upload_package(pkg_result, token=token, user=user)
 
-    dbg(pkg_result)
+    dbg(pkg_result)  # noqa

@@ -5,7 +5,7 @@ import sys
 from pathlib import Path
 from typing import Dict, Iterable, List, Union
 
-from kiara import Kiara
+from kiara.api import Kiara
 from kiara.interfaces.python_api.models.info import (
     KiaraModelClassesInfo,
     KiaraModelTypeInfo,
