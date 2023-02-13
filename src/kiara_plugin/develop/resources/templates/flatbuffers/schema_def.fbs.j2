@@ -1,0 +1,7 @@
+namespace {{ namespace }};
+
+table {{ model_name }} { {% for field_name, field in fields.items() %}
+  {{ field_name }}:{{ field['type'] }};{% endfor %}
+}
+
+root_type {{ model_name }};

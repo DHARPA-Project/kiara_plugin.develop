@@ -1,0 +1,68 @@
+
+╭─ Value details for: topic.topic_models ─────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│                                                                                                                                             │
+│   value_id            fc0fbdbc-6838-4e41-92db-895999ee2dbc                                                                                  │
+│   kiara_id            e61dc532-991a-46b0-98fe-617a4b58f847                                                                                  │
+│                                                                                                                                             │
+│                       ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────   │
+│   data_type_info                                                                                                                            │
+│                         data_type_name     dict                                                                                             │
+│                         data_type_config   {}                                                                                               │
+│                         characteristics    {                                                                                                │
+│                                              "is_scalar": false,                                                                            │
+│                                              "is_json_serializable": true                                                                   │
+│                                            }                                                                                                │
+│                         data_type_class                                                                                                     │
+│                                              python_class_name    DictValueType                                                             │
+│                                              python_module_name   kiara.data_types.included_core_types                                      │
+│                                              full_name            kiara.data_types.included_core_types.DictValueType                        │
+│                                                                                                                                             │
+│                                                                                                                                             │
+│   destiny_backlinks   {}                                                                                                                    │
+│   enviroments         None                                                                                                                  │
+│   property_links      {                                                                                                                     │
+│                         "metadata.python_class": "c7631c32-ec2f-4dcd-a13d-6b322ad7dc82"                                                     │
+│                       }                                                                                                                     │
+│   value_hash          zdpuAn82DWbjNu3iL1Tk4UbsfTB8WhyRTuKDkTinAaYtykVZv                                                                     │
+│   value_schema                                                                                                                              │
+│                         type          dict                                                                                                  │
+│                         type_config   {}                                                                                                    │
+│                         default       __not_set__                                                                                           │
+│                         optional      False                                                                                                 │
+│                         is_constant   False                                                                                                 │
+│                         doc           A dictionary with one coherence model table for each number of topics.                                │
+│                                                                                                                                             │
+│   value_size          3.8 KB                                                                                                                │
+│   value_status        -- set --                                                                                                             │
+│                                                                                                                                             │
+│                       ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────   │
+│                                                                                                                                             │
+│   lineage             generate.LDA.for.tokens_array                                                                                         │
+│                       ├── input: compute_coherence (boolean) = 15e1c241-0af6-4fce-9298-85ba49075aa4                                         │
+│                       ├── input: num_topics_max (integer) = 93dea097-87e2-46ee-af25-e8b3102b62f2                                            │
+│                       ├── input: num_topics_min (integer) = f88cbc90-c145-4c3a-a9fe-8314ffc2b6d2                                            │
+│                       ├── input: tokens_array (array) = 829ab660-6f7d-4972-92f5-d989d52e9499                                                │
+│                       │   └── preprocess.tokens_array                                                                                       │
+│                       │       ├── input: remove_all_numeric (boolean) = ee2da0d0-7fdc-4b10-8a49-42364ee4652b                                │
+│                       │       ├── input: remove_alphanumeric (boolean) = ee2da0d0-7fdc-4b10-8a49-42364ee4652b                               │
+│                       │       ├── input: remove_non_alpha (boolean) = ee2da0d0-7fdc-4b10-8a49-42364ee4652b                                  │
+│                       │       ├── input: remove_short_tokens (integer) = 9ce6ace8-351f-46f9-913b-8d5481de1d67                               │
+│                       │       ├── input: remove_stopwords (list) = 517b9772-d95c-497a-b4c3-9d850b012c24                                     │
+│                       │       │   └── create.stopwords_list                                                                                 │
+│                       │       │       ├── input: languages (list) = bf21e2c4-6a62-4054-9a2c-1c7722f9801c                                    │
+│                       │       │       └── input: stopword_list (list) = 6602b15a-2da8-4e3a-b146-9b6615fe740f                                │
+│                       │       ├── input: to_lowercase (boolean) = ee2da0d0-7fdc-4b10-8a49-42364ee4652b                                      │
+│                       │       └── input: tokens_array (array) = 753f2da1-52d3-4a7d-8d92-359a2c79d734                                        │
+│                       │           └── tokenize.texts_array                                                                                  │
+│                       │               ├── input: texts_array (array) = 53ce9f3a-b6d4-4ad1-9de2-f273aa445ab2                                 │
+│                       │               │   └── table.pick.column                                                                             │
+│                       │               │       ├── input: column_name (string) = c526c329-d4d5-4a62-9c12-eff17243bb18                        │
+│                       │               │       └── input: table (table) = a8bf486b-5eff-411a-9510-0e966f047291                               │
+│                       │               │           └── create.table                                                                          │
+│                       │               │               └── input: file_bundle (file_bundle) = 0bdb1093-0d69-4c11-837d-56789e73f06e           │
+│                       │               │                   └── import.local.file_bundle                                                      │
+│                       │               │                       └── input: path (string) = 2c188697-64e2-4c04-bed5-9e81cad87719               │
+│                       │               └── input: tokenize_by_word (boolean) = 15e1c241-0af6-4fce-9298-85ba49075aa4                          │
+│                       └── input: words_per_topic (integer) = 4563f90d-0b84-48f7-8934-6d74aed188bd                                           │
+│                                                                                                                                             │
+╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯

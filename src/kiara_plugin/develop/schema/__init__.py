@@ -44,19 +44,21 @@ class ModelFilter(BaseModel):
         return self._filters
 
     def model_matches(
-        self, model_cls: KiaraModelTypeInfo, check_module_name: bool = False
+        self, model_cls: KiaraModelTypeInfo, also_check_class_name: bool = False
     ) -> bool:
 
         if not self.all_filter_tokens:
             return True
 
         for f in self.all_filter_tokens:
-            if check_module_name:
-                token = model_cls.python_class.full_name
-            else:
-                token = model_cls.python_class.python_class_name
+            token = model_cls.type_name
             if f.lower() in token.lower() or f.lower() in token.lower():
                 return True
+
+            if also_check_class_name:
+                token = model_cls.python_class.full_name
+                if f.lower() in token.lower() or f.lower() in token.lower():
+                    return True
 
         return False
 
@@ -82,11 +84,12 @@ class ModelSchemaExporter(abc.ABC):
         final_filters = _filters.all_filter_tokens
 
         all_models = self._kiara.kiara_model_registry.all_models
+
         if final_filters:
             _temp = {}
             for model_id, model_cls in all_models.item_infos.items():
 
-                match = _filters.model_matches(model_cls)
+                match = _filters.model_matches(model_cls, also_check_class_name=True)
                 if match:
                     _temp[model_id] = model_cls
             all_models = KiaraModelClassesInfo(

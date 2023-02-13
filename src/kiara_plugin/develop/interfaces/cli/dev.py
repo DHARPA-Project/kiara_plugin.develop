@@ -3,11 +3,9 @@
 #  Copyright (c) 2021, Markus Binsteiner
 #
 #  Mozilla Public License, version 2.0 (see LICENSE or https://www.mozilla.org/en-US/MPL/2.0/)
-import os
-import os.path
 import sys
 from pathlib import Path
-from typing import Tuple
+from typing import Tuple, Union
 
 import rich_click as click
 from kiara import KiaraAPI
@@ -16,6 +14,7 @@ from kiara.interfaces.python_api.models.info import KiaraModelTypeInfo
 from kiara.utils.cli import output_format_option, terminal_print, terminal_print_model
 from kiara.utils.graphs import print_ascii_graph
 
+from kiara_plugin.develop.schema.flatbuffers import FlatbuffersSchemaExporter
 from kiara_plugin.develop.schema.javascript import TypeScriptModelExporter
 
 
@@ -99,27 +98,25 @@ def print_operation_subcomponents(ctx, operation_id: str, show_data: bool):
     terminal_print(tree)
 
 
-@model.group(name="html")
+@model.group(name="render")
 @click.pass_context
-def html(ctx):
-    """Utilities to do html-related tasks with kiara models."""
+def render(ctx):
+    """Code generator/Schema translator for kiara models.."""
 
 
-@html.command()
+@render.command("typescript")
 @click.argument("filter", nargs=-1)
 @click.option(
-    "--check-module-name",
-    "-m",
-    help="If using filters, compare the filters against the full Python path (incl. module path), not just the class name.",
-    is_flag=True,
+    "--output",
+    "-o",
+    help="The file to write the output, otherwise print to stdout.",
+    required=False,
 )
-@click.option("--output", "-o", help="The file to write the output", required=False)
 @click.option("--force", "-f", help="Overwrite existing file(s)..", is_flag=True)
 @click.pass_context
-def create_typescript_models(
+def render_typescript(
     ctx,
     filter: Tuple[str],
-    check_module_name: bool,
     output: str,
     force: bool,
 ):
@@ -128,23 +125,79 @@ def create_typescript_models(
     kiara = ctx.obj["kiara"]
     exporter = TypeScriptModelExporter(kiara=kiara)
 
-    if output is None:
-        output = os.path.join(os.getcwd(), "kiara_models.ts")
+    _output: Union[None, Path] = None
+    if output is not None:
 
-    _output = Path(output)
-    if _output.exists():
-        _output = _output / "kiara_models.ts"
+        _output = Path(output)
+        if _output.exists():
+            _output = _output / "kiara_models.ts"
 
-    if _output.exists():
-        if not force:
-            terminal_print()
-            terminal_print(
-                f"Output file '{_output.as_posix()}' already exists: {_output} and '--force' not specified."
-            )
-            sys.exit(1)
+        if _output.exists():
+            if not force:
+                terminal_print()
+                terminal_print(
+                    f"Output file '{_output.as_posix()}' already exists: {_output} and '--force' not specified."
+                )
+                sys.exit(1)
 
     translated = exporter.translate(filters=filter)
-    _output.write_text(translated["kiara_models.ts"])
+    if _output is not None:
+        _output.write_text(translated["kiara_models.ts"])
+    else:
+        print(translated["kiara_models.ts"])
+
+
+@render.command("flatbuffers")
+@click.argument("filter", nargs=-1)
+@click.option(
+    "--output",
+    "-o",
+    help="The file to write the output, otherwise print to stdout.",
+    required=False,
+)
+@click.option("--force", "-f", help="Overwrite existing file(s)..", is_flag=True)
+@click.pass_context
+def render_flatbuffers(
+    ctx,
+    filter: Tuple[str],
+    output: str,
+    force: bool,
+):
+    """Create flatbuffer schemas."""
+
+    kiara = ctx.obj["kiara"]
+    exporter = FlatbuffersSchemaExporter(kiara=kiara)
+
+    _output: Union[None, Path] = None
+    if output is not None:
+
+        _output = Path(output)
+        if _output.exists():
+            _output = _output / "kiara_models.fbs"
+
+        if _output.exists():
+            if not force:
+                terminal_print()
+                terminal_print(
+                    f"Output file '{_output.as_posix()}' already exists: {_output} and '--force' not specified."
+                )
+                sys.exit(1)
+
+    translated = exporter.translate(filters=filter)
+    if _output is not None:
+        raise NotImplementedError()
+        # _output.write_text(translated["kiara_models.fbs"])
+    else:
+        for model, text in translated.items():
+            print("# ==========================================")
+            print(f"# {model}")
+            print(text)
+
+
+@model.group(name="html")
+@click.pass_context
+def html(ctx):
+    """Utilities to do html-related tasks with kiara models."""
 
 
 @html.command("operation")
