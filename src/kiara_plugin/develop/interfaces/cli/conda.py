@@ -7,15 +7,14 @@
 
 import os
 import sys
-import typing
 from pathlib import Path
 from typing import Union
 
 import rich_click as click
 from kiara.utils.cli import terminal_print
 
-if typing.TYPE_CHECKING:
-    from kiara_plugin.develop.conda import CondaEnvMgmt
+# if typing.TYPE_CHECKING:
+#     from kiara_plugin.develop.conda import CondaEnvMgmt
 
 
 @click.group("conda")
@@ -61,7 +60,7 @@ def build_package_from_spec(
 
     from kiara.utils.files import get_data_from_file
 
-    from kiara_plugin.develop.conda import PkgSpec
+    from kiara_plugin.develop.conda import CondaEnvMgmt, PkgSpec
 
     conda_mgmt: CondaEnvMgmt = CondaEnvMgmt()
 
@@ -109,6 +108,8 @@ def build_package_spec(
     import orjson
     from kiara.utils.json import orjson_dumps
     from rich.syntax import Syntax
+
+    from kiara_plugin.develop.conda import CondaEnvMgmt
 
     if output:
         o = Path(output)
@@ -192,6 +193,8 @@ def build_package(
     force_version: bool = False,
 ):
     """Create a conda environment."""
+
+    from kiara_plugin.develop.conda import CondaEnvMgmt
 
     if publish and not token:
         if not os.environ.get("ANACONDA_PUSH_TOKEN"):
