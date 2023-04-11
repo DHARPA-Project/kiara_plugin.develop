@@ -298,6 +298,11 @@ class CondaEnvMgmt(object):
                     home_page = url[10:]
                     break
 
+        if patch_data and "entry_points" in patch_data.keys() and patch_data["entry_points"]:
+            entry_points = patch_data["entry_points"]
+        else:
+            entry_points = {}
+
         spec_data = {
             "pkg_name": pkg_name,
             "pkg_version": pkg_metadata["version"],
@@ -313,6 +318,7 @@ class CondaEnvMgmt(object):
                 "recipe_maintainers": recipe_maintainers,
             },
             "test": test_spec,
+            "entry_points": entry_points,
         }
 
         return PkgSpec(**spec_data)

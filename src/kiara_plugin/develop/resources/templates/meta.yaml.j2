@@ -19,6 +19,9 @@ build:
   number: 0
   noarch: python
 {% if not pkg_info.pkg_url.endswith('.whl') %}  script: 'python -m pip install --no-deps --ignore-installed -vv .'{% else %}  script: 'python -m pip install --no-deps --ignore-installed -vv {{ pkg_info.pkg_url }}'{% endif %}
+{% if pkg_info.entry_points %}  entry_points:{% for k, v in pkg_info.entry_points.items() %}
+    - {{ k }} = {{ v }}{% endfor %}
+{% endif %}
 
 requirements:
   host:
