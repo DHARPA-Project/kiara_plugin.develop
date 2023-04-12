@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
-from typing import List, Union, Dict
+from typing import Dict, List, Union
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from kiara.utils.json import orjson_dumps
@@ -91,7 +91,9 @@ class PkgSpec(BaseModel):
     )
     metadata: PkgSpecMetadata = Field(description="Misc. package metadata.")
     test: PkgSpecTests = Field(description="Test specs.", default_factory=PkgSpecTests)
-    entry_points: Dict[str, str] = Field(description="The package entry point(s).", default_factory=dict)
+    entry_points: Dict[str, str] = Field(
+        description="The package entry point(s).", default_factory=dict
+    )
 
     _environment: Environment = PrivateAttr(None)
 

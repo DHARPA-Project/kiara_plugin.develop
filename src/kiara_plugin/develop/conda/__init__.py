@@ -298,7 +298,11 @@ class CondaEnvMgmt(object):
                     home_page = url[10:]
                     break
 
-        if patch_data and "entry_points" in patch_data.keys() and patch_data["entry_points"]:
+        if (
+            patch_data
+            and "entry_points" in patch_data.keys()
+            and patch_data["entry_points"]
+        ):
             entry_points = patch_data["entry_points"]
         else:
             entry_points = {}
