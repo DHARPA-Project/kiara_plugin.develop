@@ -26,7 +26,7 @@ jobs:
           python-version: "{% raw %}${{ matrix.python_version }}{% endraw %}"
       - uses: actions/checkout@v3
       - name: install kiara_plugin.{{ cookiecutter.project_slug }}
-        run: pip install -U --extra-index-url https://pypi.fury.io/dharpa/ .[all,dev_testing]
+        run: pip install -U .[all,dev_testing]
       - name: display installed kiara and module package versions
         run: pip list | grep kiara
       - name: Test with pytest
@@ -43,16 +43,15 @@ jobs:
 #          python-version: "3.9"
 #      - uses: actions/checkout@v3
 #      - name: install kiara
-#        run: pip install -U --extra-index-url https://pypi.fury.io/dharpa/ .[all,dev_testing]
+#        run: pip install -U .[all,dev_testing]
 #      - name: display installed kiara and module package versions
 #        run: pip list | grep kiara
 #      - name: Run coverage
 #        run: coverage run -m pytest tests
-#      - name: Upload coverage data to coveralls.io
-#        run: coveralls --service=github
-#        env:
-#          GITHUB_TOKEN:  {% raw %}${{ secrets.GITHUB_TOKEN }}{% endraw %}""
+#      - name: coveralls
+#        uses: coverallsapp/github-action@v2
 
+# Uncomment this if you want to run mypy
 #  mypy-linux:
 #    name: mypy check on linux
 #    runs-on: ubuntu-latest
@@ -66,7 +65,7 @@ jobs:
 #          python-version: "{% raw %}${{ matrix.python_version }}{% endraw %}"
 #      - uses: actions/checkout@v3
 #      - name: install kiara_plugin.{{ cookiecutter.project_slug }}
-#        run: pip install -U --extra-index-url https://pypi.fury.io/dharpa/ .[all,dev_testing]
+#        run: pip install -U .[all,dev_testing]
 #      - name: Test with mypy
 #        run: make mypy
 
@@ -109,7 +108,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: install kiara_plugin.{{ cookiecutter.project_slug }} package
-        run: pip install -U --extra-index-url https://pypi.fury.io/dharpa/ .[all,dev_documentation]
+        run: pip install -U .[all,dev_documentation]
       - run: git config --global user.email "{{ cookiecutter.full_name }}"
       - run: git config --global user.name "{{ cookiecutter.email }}"
       - name: create latest documentation
@@ -142,7 +141,7 @@ jobs:
       - name: install pip
         run: pip install pip==21.2.4 setuptools==57.4.0
       - name: install kiara
-        run: pip install -U --extra-index-url https://pypi.fury.io/dharpa/ -e .[all]
+        run: pip install -U -e .[all]
       - name: install 'build' package
         run: pip install -U build
       - name: create packages
