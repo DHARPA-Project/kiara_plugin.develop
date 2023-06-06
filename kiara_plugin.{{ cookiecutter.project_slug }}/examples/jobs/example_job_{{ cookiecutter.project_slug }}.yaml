@@ -1,0 +1,3 @@
+operation: "${this_dir}/../pipelines/example_pipeline_{{ cookiecutter.project_slug }}.yaml"
+inputs:
+  name: "beautiful world"
