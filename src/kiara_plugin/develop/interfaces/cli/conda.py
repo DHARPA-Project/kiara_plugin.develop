@@ -8,9 +8,10 @@
 import os
 import sys
 from pathlib import Path
-from typing import Union
+from typing import Any, Union
 
 import rich_click as click
+
 from kiara.utils.cli import terminal_print
 
 # if typing.TYPE_CHECKING:
@@ -59,7 +60,6 @@ def build_package_from_spec(
             sys.exit(1)
 
     from kiara.utils.files import get_data_from_file
-
     from kiara_plugin.develop.conda import CondaEnvMgmt, PkgSpec
 
     conda_mgmt: CondaEnvMgmt = CondaEnvMgmt()
@@ -106,9 +106,9 @@ def build_package_spec(
     """Create a conda package spec file."""
 
     import orjson
-    from kiara.utils.json import orjson_dumps
     from rich.syntax import Syntax
 
+    from kiara.utils.json import orjson_dumps
     from kiara_plugin.develop.conda import CondaEnvMgmt
 
     if output:
@@ -206,7 +206,7 @@ def build_package(
 
     conda_mgmt: CondaEnvMgmt = CondaEnvMgmt()
 
-    _patch_data = None
+    _patch_data: Any = None
     if patch_data:
         from kiara.utils.files import get_data_from_file
 
@@ -215,16 +215,16 @@ def build_package(
     metadata = conda_mgmt.get_pkg_metadata(
         pkg=pkg, version=version, force_version=force_version
     )
-    pkg = conda_mgmt.create_pkg_spec(pkg_metadata=metadata, patch_data=_patch_data)
+    _pkg = conda_mgmt.create_pkg_spec(pkg_metadata=metadata, patch_data=_patch_data)
 
     terminal_print()
     terminal_print("Generated conda package spec:")
     terminal_print()
-    terminal_print(pkg.create_conda_spec())
+    terminal_print(_pkg.create_conda_spec())
     terminal_print()
     terminal_print("Building package...")
-    pkg_result = conda_mgmt.build_package(pkg)
+    pkg_result = conda_mgmt.build_package(_pkg)
     if publish:
         conda_mgmt.upload_package(pkg_result, token=token, user=user)
 
-    dbg(pkg_result)  # noqa
+    terminal_print(pkg_result)

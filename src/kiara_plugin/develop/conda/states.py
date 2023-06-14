@@ -13,7 +13,6 @@ from pathlib import Path
 from typing import Any, Dict, List, Mapping, Union
 
 from kiara.utils.cli import terminal_print
-
 from kiara_plugin.develop.defaults import KIARA_DEV_MICROMAMBA_TARGET_PREFIX
 
 
@@ -34,9 +33,12 @@ class State(abc.ABC):
         if self._states is None:
             raise Exception("States not set (yet). This is a bug.")
 
-        self._states[state_id].resolve()
+        self._states.get_state(state_id).resolve()
 
     def get_other_state_detail(self, state_id: str, key: str):
+
+        if self._states is None:
+            raise Exception("States not set (yet). This is a bug.")
 
         return self._states.get_state(state_id).get_detail(key)
 
@@ -83,7 +85,7 @@ class State(abc.ABC):
 
 
 class States(object):
-    def __init__(self):
+    def __init__(self) -> None:
 
         self._states: Dict[str, State] = {}
 
@@ -119,7 +121,7 @@ class MicroMambaAvailable(State):
         else:
             return None
 
-    def _purge(self):
+    def _purge(self) -> None:
 
         root_path: str = self.get_config("root_path")
         bin_path = os.path.join(root_path, "bin", "micromamba")
@@ -135,7 +137,7 @@ class MicroMambaAvailable(State):
         this_arch = platform.machine().lower()
         this_os = platform.system().lower()
 
-        ARCH_MAP = {
+        ARCH_MAP: Dict[str, Dict[str, str]] = {
             "linux": {
                 "x86_64": "linux-64",
                 "amd64": "linux-64",
@@ -166,7 +168,7 @@ class MicroMambaAvailable(State):
         terminal_print("Downloading micromamba...")
 
         fh = io.BytesIO()
-        with urllib.request.urlopen(url) as response:
+        with urllib.request.urlopen(url) as response:  # type: ignore
             fh.write(response.read())
 
         fh.seek(0)
@@ -273,7 +275,7 @@ dependencies:
         ]
         result = subprocess.run(args, capture_output=True, text=True, shell=False)
 
-        if filename != None:
+        if filename is not None:
             os.unlink(filename)
 
         if result.returncode != 0:

@@ -16,8 +16,8 @@ def unbuffered(
 ) -> Generator[str, None, None]:
 
     sel = selectors.DefaultSelector()
-    sel.register(proc.stdout, selectors.EVENT_READ)
-    sel.register(proc.stderr, selectors.EVENT_READ)
+    sel.register(proc.stdout, selectors.EVENT_READ)  # type: ignore
+    sel.register(proc.stderr, selectors.EVENT_READ)  # type: ignore
     current_stdout = ""
     current_stderr = ""
 
@@ -26,7 +26,7 @@ def unbuffered(
 
     while True:
         for key, _ in sel.select():
-            data = key.fileobj.read(1)
+            data = key.fileobj.read(1)  # type: ignore
             if not data:
                 if key.fileobj == proc.stdout:
                     stdout_finished = True
@@ -75,7 +75,7 @@ def execute(
     stderr_output = []
     _args = list(args)
     with subprocess.Popen(
-        [cmd] + _args,
+        [cmd,*_args],
         shell=False,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -84,15 +84,15 @@ def execute(
     ) as proc:
         for line in unbuffered(proc, stdout_prefix="o-", stderr_prefix="e-"):
             if line.startswith("o-"):
-                l = line[2:]
+                _line = line[2:]
                 if stdout_callback:
-                    stdout_callback(l)
-                stdout_output.append(l)
+                    stdout_callback(_line)
+                stdout_output.append(_line)
             elif line.startswith("e-"):
-                l = line[2:]
+                _line = line[2:]
                 if stderr_callback:
-                    stderr_callback(l)
-                stderr_output.append(l)
+                    stderr_callback(_line)
+                stderr_output.append(_line)
 
         proc.wait()
         run_details = RunDetails(

@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Tuple, Union
 
 import rich_click as click
+
 from kiara.utils.cli import output_format_option, terminal_print, terminal_print_model
 
 if typing.TYPE_CHECKING:

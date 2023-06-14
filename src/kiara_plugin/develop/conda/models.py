@@ -3,11 +3,11 @@ import os
 from typing import Dict, List, Union
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
-from kiara.utils.json import orjson_dumps
-from kiara.utils.yaml import StringYAML
-from orjson import orjson
+from orjson import orjson  # type: ignore
 from pydantic import BaseModel, Extra, Field, PrivateAttr, root_validator
 
+from kiara.utils.json import orjson_dumps
+from kiara.utils.yaml import StringYAML
 from kiara_plugin.develop.defaults import KIARA_DEV_RESOURCES_FOLDER
 
 

@@ -2,8 +2,9 @@
 import typing
 
 import rich_click as click
-from kiara.utils.cli import terminal_print_model
 from rich.table import Table
+
+from kiara.utils.cli import terminal_print_model
 
 #  Copyright (c) 2021, Markus Binsteiner
 #
@@ -25,7 +26,7 @@ def debug(ctx):
 def print_jobs(ctx):
     """Print stored jobs."""
 
-    kiara: Kiara = ctx.obj.kiara
+    kiara: Kiara = ctx.obj.kiara  # type: ignore
 
     all_records = kiara.job_registry.retrieve_all_job_records()
 
@@ -37,7 +38,7 @@ def print_jobs(ctx):
 def print_workflows(ctx):
     """Print stored workflows."""
 
-    kiara: Kiara = ctx.obj.kiara
+    kiara: Kiara = ctx.obj.kiara  # type: ignore
 
     workflow_aliases = kiara.workflow_registry.workflow_aliases.keys()
 

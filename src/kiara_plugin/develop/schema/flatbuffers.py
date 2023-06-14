@@ -2,7 +2,9 @@
 import os
 import typing
 import uuid
-from typing import Any, Dict, Mapping, Type
+from typing import Any, Dict, Mapping, Tuple, Type
+
+from pydantic import BaseModel
 
 from kiara.context import Kiara
 from kiara.interfaces.python_api.models.info import (
@@ -10,8 +12,6 @@ from kiara.interfaces.python_api.models.info import (
     KiaraModelTypeInfo,
 )
 from kiara.models import KiaraModel
-from pydantic import BaseModel
-
 from kiara_plugin.develop.schema import ModelSchemaExporter
 
 TYPE_MAP = {
@@ -48,7 +48,7 @@ class FlatbuffersSchemaExporter(ModelSchemaExporter):
 
         if isinstance(cls, type):
             if issubclass(cls, KiaraModel):
-                return f"kiara_models.{cls._kiara_model_id}"
+                return f"kiara_models.{cls._kiara_model_id}"  # type: ignore
             elif issubclass(cls, BaseModel):
                 return f"__BASE_MODEL__({cls})"
             else:
@@ -56,7 +56,7 @@ class FlatbuffersSchemaExporter(ModelSchemaExporter):
         else:
             raise Exception(f"Can't handle field: {cls} (type: {type(cls)}).")
 
-    def parse_child_model(self, model: BaseModel):
+    def parse_child_model(self, model: Type[BaseModel]):
 
         fields = {}
         for field_name, field in model.__fields__.items():
@@ -80,10 +80,7 @@ class FlatbuffersSchemaExporter(ModelSchemaExporter):
 
         return fields
 
-    def export_model(self, model: KiaraModelTypeInfo) -> str:
-
-        print(model)
-        print()
+    def export_model(self, model: KiaraModelTypeInfo) -> Tuple[str, str]:
 
         tokens = model.type_name.split(".", maxsplit=1)
         if len(tokens) == 1:

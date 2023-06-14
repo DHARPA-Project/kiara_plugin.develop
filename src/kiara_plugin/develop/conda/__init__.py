@@ -8,8 +8,8 @@ from typing import Any, Dict, Iterable, List, Mapping, Union
 
 import httpx
 from diskcache import Cache
-from kiara.utils.cli import terminal_print
 
+from kiara.utils.cli import terminal_print
 from kiara_plugin.develop.conda.models import (
     DEFAULT_HOST_DEPENDENCIES,
     CondaBuildPackageDetails,
@@ -42,7 +42,7 @@ def default_stderr_print(msg):
 
 
 class CondaEnvMgmt(object):
-    def __init__(self):
+    def __init__(self) -> None:
 
         self._states: States = States()
         self._states.add_state(
@@ -52,7 +52,7 @@ class CondaEnvMgmt(object):
         )
         channels = ["conda-forge", "dharpa", "anaconda"]
         # deps = [f"python=={DEFAULT_PYTHON_VERSION}", "boa", "mamba", "anaconda"]
-        deps = [f"python==3.9", "boa", "mamba", "anaconda-client", "conda-verify"]
+        deps = ["python==3.9", "boa", "mamba", "anaconda-client", "conda-verify"]
         conda_build_env = MambaEnvironment(
             "conda-build-env",
             env_name="conda-build-env",
@@ -209,15 +209,19 @@ class CondaEnvMgmt(object):
             stdout_callback=default_stdout_print,
             stderr_callback=default_stderr_print,
         )
-        dbg(details)
+
+        terminal_print("Uploaded package, details:")
+        terminal_print(details)
+
+
 
     def create_pkg_spec(
         self,
         pkg_metadata: Mapping[str, Any],
-        patch_data: [Union[None, Mapping[str, str]]] = None,
+        patch_data: Union[None, Mapping[str, Any]] = None,
     ) -> PkgSpec:
 
-        req_repl_dict = None
+        req_repl_dict: Union[None, Mapping[str, str]] = None
         if patch_data:
             req_repl_dict = patch_data.get("requirements", None)
 
@@ -271,7 +275,6 @@ class CondaEnvMgmt(object):
                     pkg_url = v["url"]
 
         if pkg_url is None:
-            dbg(version_data)
             raise Exception(f"Could not find hash for package: {pkg_name}.")
 
         pkg_requirements = req_list
@@ -353,7 +356,7 @@ class CondaEnvMgmt(object):
         self, env_dir, path: str, extras: Union[None, Iterable[str]] = None
     ):
 
-        real_path = os.path.isdir(os.path.realpath(os.path.expanduser(path)))
+        real_path = os.path.realpath(os.path.expanduser(path))
         if not os.path.isdir(real_path):
             raise Exception(
                 f"Can't install python packge from path, path does not exist or is not a directory: {path}."
@@ -376,7 +379,7 @@ class CondaEnvMgmt(object):
         self,
         pkg_name: str,
         version: Union[str, None, int, float] = None,
-        extras: Iterable[str] = None,
+        extras: Union[Iterable[str], None] = None,
     ) -> Mapping[str, Any]:
 
         if version:
@@ -408,8 +411,12 @@ class CondaEnvMgmt(object):
                     raise Exception(
                         "Specified project is a local folder, using 'version' with this does not make sense. Use the 'force_version' argument if necessary."
                     )
+
+                _version: Union[None, str] = str(version)
+            else:
+                _version = None
             pkg_metadata = self.get_pkg_metadata_from_project_folder(
-                path, force_version=version
+                path, force_version=_version
             )
 
         else:
@@ -423,7 +430,7 @@ class CondaEnvMgmt(object):
         self,
         pkg_name: str,
         version: Union[str, None, int, float] = None,
-        extras: Iterable[str] = None,
+        extras: Union[None, Iterable[str]] = None,
     ) -> Mapping[str, Any]:
 
         result = self.get_all_pkg_data_from_pypi(
@@ -450,8 +457,8 @@ class CondaEnvMgmt(object):
         pip_cmd = os.path.join(prefix, env_name, "bin", "pip")
         args = ["install", "--quiet", "--dry-run", "--report", "-", project_path]
 
-        result = execute(pip_cmd, *args)
-        pkg_metadata = json.loads(result.stdout)
+        run_result = execute(pip_cmd, *args)
+        pkg_metadata = json.loads(run_result.stdout)
         install_list = pkg_metadata["install"]
         result = None
         for install_item in install_list:
@@ -509,7 +516,7 @@ class CondaEnvMgmt(object):
         if not reqs:
             return {}
 
-        filtered_reqs = {}
+        filtered_reqs: Dict[str, Dict[str, Any]] = {}
         extras_reqs = {}
         for r in reqs:
             tokens = r.split(";")

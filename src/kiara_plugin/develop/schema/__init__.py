@@ -5,13 +5,14 @@ import sys
 from pathlib import Path
 from typing import Dict, Iterable, List, Union
 
+from pydantic import BaseModel, Field, PrivateAttr
+
 from kiara.api import Kiara
 from kiara.interfaces.python_api.models.info import (
     KiaraModelClassesInfo,
     KiaraModelTypeInfo,
 )
 from kiara.utils.cli import terminal_print
-from pydantic import BaseModel, Field, PrivateAttr
 
 
 class ModelFilter(BaseModel):
@@ -102,7 +103,7 @@ class ModelSchemaExporter(abc.ABC):
                 for excl in exclude:
                     if (
                         excl.lower() in model_id.lower()
-                        or excl.lower() in model_cls.__name__.lower()
+                        or excl.lower() in model_cls.__name__.lower()  # type: ignore
                     ):
                         break
                     else:
