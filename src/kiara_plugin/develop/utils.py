@@ -42,7 +42,7 @@ def unbuffered(
                 else:
                     current_stdout += data
             else:
-                if data in newlines:
+                if data in newlines:  # noqa
                     yield stderr_prefix + current_stderr
                     current_stderr = ""
                 else:

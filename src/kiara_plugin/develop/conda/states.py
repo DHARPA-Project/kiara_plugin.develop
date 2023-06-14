@@ -168,7 +168,7 @@ class MicroMambaAvailable(State):
         terminal_print("Downloading micromamba...")
 
         fh = io.BytesIO()
-        with urllib.request.urlopen(url) as response:  # type: ignore
+        with urllib.request.urlopen(url) as response:  # type: ignore  # noqa
             fh.write(response.read())
 
         fh.seek(0)
