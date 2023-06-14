@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
 import shutil
 from subprocess import PIPE, Popen
-from typing import Dict
+from typing import TYPE_CHECKING, Dict, List, Type
+
+from pydantic2ts.cli.script import generate_json_schema
 
 from kiara.context import Kiara
 from kiara.interfaces.python_api.models.info import KiaraModelClassesInfo
-from pydantic2ts.cli.script import generate_json_schema
-
 from kiara_plugin.develop.schema import ModelSchemaExporter
+
+if TYPE_CHECKING:
+    from pydantic import BaseModel
 
 
 class TypeScriptModelExporter(ModelSchemaExporter):
@@ -24,9 +27,9 @@ class TypeScriptModelExporter(ModelSchemaExporter):
 
     def export_models(self, all_models: KiaraModelClassesInfo) -> Dict[str, str]:
 
-        schema = generate_json_schema(
-            [x.__class__ for x in all_models.item_infos.values()]
-        )
+        models: List[Type[BaseModel]] = [x.python_class.get_class() for x in all_models.item_infos.values()]  # type: ignore
+
+        schema = generate_json_schema(models)
 
         # schema_dir = mkdtemp()
         # schema_file_path = os.path.join(schema_dir, "schema.json")
