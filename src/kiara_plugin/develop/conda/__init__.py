@@ -47,7 +47,7 @@ class CondaEnvMgmt(object):
         self._states: States = States()
         self._states.add_state(
             MicroMambaAvailable(
-                "micromamba_available", root_path=KIARA_DEV_CACHE_FOLDER
+                "micromamba_available", root_path=KIARA_DEV_CACHE_FOLDER, version="1.4.6"
             )
         )
         channels = ["conda-forge", "dharpa", "anaconda"]

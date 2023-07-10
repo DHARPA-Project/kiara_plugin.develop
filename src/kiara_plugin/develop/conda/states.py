@@ -160,7 +160,12 @@ class MicroMambaAvailable(State):
                 f"No micromamba executable available for: {this_os} / {this_arch}."
             )
 
-        url = f"https://micro.mamba.pm/api/micromamba/{token}/latest"
+        try:
+            version = self.get_config("version")
+        except Exception:
+            version = "latest"
+
+        url = f"https://micro.mamba.pm/api/micromamba/{token}/{version}"
 
         root_path: Path = self.get_config("root_path")
         # bin_path = root_path / "bin" / "micromamba"
