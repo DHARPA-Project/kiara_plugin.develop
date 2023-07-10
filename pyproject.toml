@@ -36,7 +36,7 @@ dependencies = [
     "kiara_plugin.onboarding>=0.4.5",
     "diskcache>=5.4.0",
     "httpx>=0.23.0",
-    "pydantic-to-typescript>=1.0.9"
+    "pydantic-to-typescript>=1.0.10"
 ]
 dynamic = ["version"]
 

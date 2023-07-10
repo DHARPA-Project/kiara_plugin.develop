@@ -48,6 +48,9 @@ dev_utils = [
 dev_all = [
     "kiara[dev_all]"
 ]
+streamlit = [
+    "kiara_plugin.streamlit"
+]
 
 [project.entry-points."kiara.plugin"]
 {{ cookiecutter.project_slug }} = "kiara_plugin.{{ cookiecutter.project_slug }}"
