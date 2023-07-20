@@ -18,7 +18,7 @@ logger = structlog.getLogger()
 
 class KiaraPipelineDataType(AnyType[PipelineConfig, DataTypeConfig]):
 
-    _data_type_name = "pipeline"
+    _data_type_name = "kiara_pipeline"
     @classmethod
     def python_class(cls) -> Type[PipelineConfig]:
         return PipelineConfig
