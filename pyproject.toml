@@ -17,7 +17,6 @@ requires-python = ">=3.8"
 keywords = ["kiara"]
 license = {text = "MPL-2.0"}
 classifiers = [
-    "Framework :: Django",
     "Programming Language :: Python :: 3",
     "Development Status :: 3 - Alpha",
     "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
@@ -30,7 +29,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11"
 ]
 dependencies = [
-    "kiara>=0.4.44",
+    "kiara>=0.4.48",
     "kiara_plugin.core_types>=0.4.20",
     "kiara_plugin.tabular>=0.4.28",
     "kiara_plugin.onboarding>=0.4.5",
@@ -52,6 +51,9 @@ dev_utils = [
 ]
 dev_all = [
     "kiara[dev_all]"
+]
+streamlit = [
+    "kiara_plugin.streamlit"
 ]
 
 [project.entry-points."kiara.plugin"]
