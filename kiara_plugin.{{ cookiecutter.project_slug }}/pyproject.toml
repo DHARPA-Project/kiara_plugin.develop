@@ -29,8 +29,8 @@ classifiers = [
     "Programming Language :: Python :: 3.11"
 ]
 dependencies = [
-    "kiara>=0.4.39",
-    "kiara_plugin.core_types>=0.4.17",
+    "kiara>=0.4.48",
+    "kiara_plugin.core_types>=0.4.20",
 ]
 dynamic = ["version"]
 
