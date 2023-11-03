@@ -3,7 +3,7 @@
 """This module contains the value type classes that are used in the ``kiara_plugin.develop`` package.
 """
 import os.path
-from typing import Any, Mapping, Type
+from typing import Any, ClassVar, Mapping, Type
 
 import structlog
 
@@ -18,7 +18,7 @@ logger = structlog.getLogger()
 
 class KiaraPipelineDataType(AnyType[PipelineConfig, DataTypeConfig]):
 
-    _data_type_name = "kiara_pipeline"
+    _data_type_name: ClassVar[str] ="kiara_pipeline"
     @classmethod
     def python_class(cls) -> Type[PipelineConfig]:
         return PipelineConfig
