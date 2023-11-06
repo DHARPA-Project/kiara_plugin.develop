@@ -4,7 +4,7 @@ from typing import Dict, List, Union
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from orjson import orjson  # type: ignore
-from pydantic import BaseModel, Extra, Field, PrivateAttr, root_validator
+from pydantic import BaseModel, ConfigDict, Extra, Field, PrivateAttr, root_validator
 
 from kiara.utils.json import orjson_dumps
 from kiara.utils.yaml import StringYAML
@@ -61,15 +61,17 @@ class PkgSpecTests(BaseModel):
             return ""
 
         yaml = StringYAML()
-        result = yaml.dump({"test": self.dict()})
+        result = yaml.dump({"test": self.model_dump()})
         return result
 
 
 class PkgSpec(BaseModel):
-    class Config(object):
-        json_loads = orjson.loads
-        json_dumps = orjson_dumps
-        extra = Extra.forbid
+    # class Config(object):
+    #     json_loads = orjson.loads
+    #     json_dumps = orjson_dumps
+    #     extra = Extra.forbid
+
+    model_config = ConfigDict(extra=Extra.forbid)
 
     pkg_name: str = Field(description="The package name.")
     pkg_version: str = Field(

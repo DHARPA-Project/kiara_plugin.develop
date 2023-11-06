@@ -135,7 +135,7 @@ def build_package_spec(
         if not output:
             pkg_out = Syntax(pkg_out, "json")  # type: ignore
     elif format == "spec":
-        pkg_out = spec.json(option=orjson.OPT_INDENT_2)
+        pkg_out = spec.model_dump_json(indent=2)
         if not output:
             pkg_out = Syntax(pkg_out, "json")  # type: ignore
     elif format == "conda":
