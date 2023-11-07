@@ -226,6 +226,7 @@ class CondaEnvMgmt(object):
             req_repl_dict = patch_data.get("requirements", None)
 
         requirements = self.extract_reqs_from_metadata(pkg_metadata=pkg_metadata)
+
         req_list = []
         for k, v in requirements.items():
             if req_repl_dict and k in req_repl_dict.keys():
@@ -527,7 +528,7 @@ class CondaEnvMgmt(object):
                     ver = None
                 elif len(pkg_tokens) == 2:
                     pkg = pkg_tokens[0]
-                    ver = pkg_tokens[1][1:-1]
+                    ver = pkg_tokens[1][1:]
                 else:
                     raise Exception(f"Can't parse version for pkg: {tokens[0]}")
                 cond = None

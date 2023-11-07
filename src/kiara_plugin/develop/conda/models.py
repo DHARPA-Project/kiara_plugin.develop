@@ -3,10 +3,8 @@ import os
 from typing import Dict, List, Union
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
-from orjson import orjson  # type: ignore
-from pydantic import BaseModel, ConfigDict, Extra, Field, PrivateAttr, root_validator
+from pydantic import BaseModel, ConfigDict, Extra, Field, PrivateAttr, model_validator
 
-from kiara.utils.json import orjson_dumps
 from kiara.utils.yaml import StringYAML
 from kiara_plugin.develop.defaults import KIARA_DEV_RESOURCES_FOLDER
 
@@ -39,10 +37,8 @@ class PkgSpecMetadata(BaseModel):
 
 
 class PkgSpecTests(BaseModel):
-    class Config(object):
-        json_loads = orjson.loads
-        json_dumps = orjson_dumps
-        extra = Extra.forbid
+
+    model_config = ConfigDict(extra="forbid")
 
     imports: List[str] = Field(description="The imports to test.", default_factory=list)
     source_files: List[str] = Field(
@@ -99,7 +95,8 @@ class PkgSpec(BaseModel):
 
     _environment: Environment = PrivateAttr(None)
 
-    @root_validator(pre=True)
+    @model_validator(mode="before")
+    @classmethod
     def validate_url_type(cls, values):
         pkg_url = values.get("pkg_url", None)
         if pkg_url is None:

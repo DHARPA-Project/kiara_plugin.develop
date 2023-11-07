@@ -139,9 +139,9 @@ jobs:
         with:
           fetch-depth: 0
       - name: install pip
-        run: pip install pip==21.2.4 setuptools==57.4.0
-      - name: install kiara
-        run: pip install -U -e .[all]
+        run: pip install -U pip setuptools setuptools_scm wheel
+#      - name: install kiara
+#        run: pip install -U -e .
       - name: install 'build' package
         run: pip install -U build
       - name: create packages
