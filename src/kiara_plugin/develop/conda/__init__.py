@@ -528,7 +528,15 @@ class CondaEnvMgmt(object):
                     ver = None
                 elif len(pkg_tokens) == 2:
                     pkg = pkg_tokens[0]
-                    ver = pkg_tokens[1][1:]
+                    if pkg_tokens[1][0] == "(":
+                        min = 1
+                    else:
+                        min = 0
+                    if pkg_tokens[1][-1] == ")":
+                        max = -1
+                    else:
+                        max = len(pkg_tokens[1])
+                    ver = pkg_tokens[1][min:max]
                 else:
                     raise Exception(f"Can't parse version for pkg: {tokens[0]}")
                 cond = None
