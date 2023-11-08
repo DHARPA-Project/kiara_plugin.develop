@@ -86,10 +86,10 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install ruff
+          pip install -U ruff
       # Include `--format=github` to enable automatic inline annotations.
       - name: Run Ruff
-        run: ruff -- --format=github src/
+        run: ruff --output-format=github src/
 
   build_python_package:
     name: build python package
