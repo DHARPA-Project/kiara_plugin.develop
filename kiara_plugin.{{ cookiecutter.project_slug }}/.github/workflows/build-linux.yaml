@@ -89,7 +89,7 @@ jobs:
           pip install ruff
       # Include `--format=github` to enable automatic inline annotations.
       - name: Run Ruff
-        run: ruff --format=github src/
+        run: ruff -- --format=github src/
 
   build_python_package:
     name: build python package
