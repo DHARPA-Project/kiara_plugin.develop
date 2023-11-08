@@ -43,9 +43,11 @@ classifiers = [
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11"
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12"
 ]
 dependencies = [
+<<<<<<< ours
     "kiara>=0.4.48",
     "kiara_plugin.core_types>=0.4.20",
     "kiara_plugin.tabular>=0.4.28",
@@ -53,6 +55,10 @@ dependencies = [
     "diskcache>=5.4.0",
     "httpx>=0.23.0",
     "pydantic-to-typescript>=1.0.10"
+=======
+    "kiara>=0.5.0,<0.6.0",
+    "kiara_plugin.core_types>=0.5.0,<0.6.0",
+>>>>>>> theirs
 ]
 dynamic = ["version"]
 
