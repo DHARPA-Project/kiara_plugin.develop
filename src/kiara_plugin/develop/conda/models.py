@@ -57,7 +57,7 @@ class PkgSpecTests(BaseModel):
             return ""
 
         yaml = StringYAML()
-        result = yaml.dump({"test": self.model_dump()})
+        result: str = yaml.dump({"test": self.model_dump()})
         return result
 
 
@@ -130,13 +130,13 @@ class PkgSpec(BaseModel):
     def create_boa_recipe(self) -> str:
 
         template = self.jinja_environment().get_template("recipe.yaml.j2")
-        result = template.render(pkg_info=self)
+        result: str = template.render(pkg_info=self)
         return result
 
     def create_conda_spec(self) -> str:
 
         template = self.jinja_environment().get_template("meta.yaml.j2")
-        result = template.render(pkg_info=self)
+        result: str = template.render(pkg_info=self)
         return result
 
 

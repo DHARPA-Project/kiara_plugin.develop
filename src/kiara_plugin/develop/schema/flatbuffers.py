@@ -58,15 +58,16 @@ class FlatbuffersSchemaExporter(ModelSchemaExporter):
 
     def parse_child_model(self, model: Type[BaseModel]):
 
-        fields = {}
-        for field_name, field in model.__fields__.items():
-            field_type = self.get_field_type(field.type_)
+        raise NotImplementedError("Flatbuffer exporting not implemented yet.")
 
-            fields[field_name] = {
-                "type": field_type,
-            }
-
-        return fields
+        # fields = {}
+        # for field_name, field in model.model_fields.items():
+        #     field_type = self.get_field_type(field.type_)
+        #     fields[field_name] = {
+        #         "type": field_type,
+        #     }
+        #
+        # return fields
 
     def parse_dict(self, data: Mapping[str, Any]):
 

@@ -207,6 +207,7 @@ exclude = [
     "dist",
     "node_modules",
     "venv",
+    "kiara_plugin.\\{\\{ cookiecutter.project_slug \\}\\}"
 ]
 per-file-ignores = { }
 

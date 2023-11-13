@@ -7,10 +7,11 @@ channels = ["conda-forge", "dharpa"]
 platforms = ["linux-64", "win-64", "osx-64", "osx-arm64"]
 
 [tasks]
-install-dev-env = "pip install -e '.[dev_utils]'"
-kiara = "kiara"
-show-versions = "kiara --version"
-delete-context = "kiara context delete"
+install-dev-env = "pip install -e '.[dev_utils]' && .pixi/env/bin/pre-commit install"
+pre-commit-check = "pre-commit run --all-files"
+kiara = ".pixi/env/bin/kiara"
+show-versions = ".pixi/env/bin/kiara --version"
+delete-context = ".pixi/env/bin/kiara context delete"
 
 [dependencies]
 python = "3.11.*"

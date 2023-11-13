@@ -21,7 +21,7 @@ class KiaraPipelineDataType(AnyType[PipelineConfig, DataTypeConfig]):
     _data_type_name: ClassVar[str] ="kiara_pipeline"
     @classmethod
     def python_class(cls) -> Type[PipelineConfig]:
-        return PipelineConfig
+        return PipelineConfig  # type: ignore
 
     def serialize(self, data: PipelineConfig) -> SerializedData:
 

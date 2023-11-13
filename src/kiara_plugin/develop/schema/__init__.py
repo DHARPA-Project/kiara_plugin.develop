@@ -179,5 +179,5 @@ class ModelSchemaExporter(abc.ABC):
         terminal_print()
 
     @abc.abstractmethod
-    def export_models(self, all_models: KiaraModelClassesInfo):
+    def export_models(self, all_models: KiaraModelClassesInfo) -> Dict[str, str]:
         pass
