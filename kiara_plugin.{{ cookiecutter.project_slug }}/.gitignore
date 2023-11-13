@@ -63,5 +63,5 @@ onefile.spec
 ci/conda/**/build
 ci/conda/kiara_plugin.{{ cookiecutter.project_slug }}/meta.yaml
 .pixi
-.pixi.lock
+pixi.lock
 dev.py
