@@ -107,7 +107,9 @@ jobs:
         with:
           fetch-depth: 0
       - name: install pip
-        run: pip install -U pip setuptools setuptools_scm build
+        run: pip install -U pip setuptools setuptools_scm wheel
+      - name: install 'build' package
+        run: pip install -U build
       - name: create packages
         run: python -m build
       - name: upload artifacts
