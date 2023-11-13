@@ -67,9 +67,9 @@ class KiaraPipelineDataType(AnyType[PipelineConfig, DataTypeConfig]):
         elif isinstance(data, Mapping):
             return PipelineConfig.from_config(data=data)
         elif isinstance(data, KiaraFile):
-            return PipelineConfig.from_file(data.path)
+            return PipelineConfig.from_file(data.path)  # type: ignore
         elif os.path.isfile(data):
-            return PipelineConfig.from_file(data)
+            return PipelineConfig.from_file(data)  # type: ignore
         else:
             raise KiaraException(
                 msg=f"Can't instantiate PipelineConfig with data of type '{type(data)}'."

@@ -251,5 +251,9 @@ plugins = [
 
 # mypy per-module options:
 [[tool.mypy.overrides]]
-module = ["appdirs.*"]
+module = [
+    "appdirs.*",
+    "diskcache.*",
+    "pydantic2ts.*"
+]
 ignore_missing_imports = true
