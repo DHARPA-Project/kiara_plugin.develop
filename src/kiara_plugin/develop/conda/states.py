@@ -278,7 +278,7 @@ dependencies:
             "-f",
             filename,
         ]
-        result = subprocess.run(args, capture_output=True, text=True, shell=False)
+        result = subprocess.run(args, capture_output=True, text=True, shell=False, check=False)
 
         if filename is not None:
             os.unlink(filename)

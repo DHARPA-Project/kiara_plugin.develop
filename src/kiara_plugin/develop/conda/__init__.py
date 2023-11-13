@@ -4,7 +4,7 @@ import os
 import shutil
 import subprocess
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Mapping, Union
+from typing import Any, Dict, Iterable, List, Mapping, MutableMapping, Union
 
 import httpx
 from diskcache import Cache
@@ -395,7 +395,7 @@ class CondaEnvMgmt(object):
                 f"Could not retrieve information for package '{pkg_name}': {result.text}"
             )
 
-        pkg_metadata = result.json()
+        pkg_metadata: Mapping[str, Any] = result.json()
         return pkg_metadata
 
     def get_pkg_metadata(
@@ -434,10 +434,10 @@ class CondaEnvMgmt(object):
         extras: Union[None, Iterable[str]] = None,
     ) -> Mapping[str, Any]:
 
-        result = self.get_all_pkg_data_from_pypi(
+        result: Mapping[str, Any] = self.get_all_pkg_data_from_pypi(
             pkg_name=pkg_name, version=version, extras=extras
         )
-        _result = result["info"]
+        _result: MutableMapping[str, Any] = result["info"]
         _result["releases"] = result["releases"]
         return _result
 
@@ -461,7 +461,7 @@ class CondaEnvMgmt(object):
         run_result = execute(pip_cmd, *args)
         pkg_metadata = json.loads(run_result.stdout)
         install_list = pkg_metadata["install"]
-        result = None
+        result: Union[MutableMapping[str, Any], None] = None
         for install_item in install_list:
             # TODO: windows?
             if (
@@ -504,7 +504,7 @@ class CondaEnvMgmt(object):
         ]
         result = execute(python_cmd, *args)
 
-        pkg_metadata = json.loads(result.stdout)
+        pkg_metadata: Mapping[str, Any] = json.loads(result.stdout)
         # TODO: add 'releases' info
         return pkg_metadata
 

@@ -35,18 +35,18 @@ def unbuffered(
 
                 if stdout_finished and stderr_finished:
                     break
+
             if key.fileobj is proc.stdout:
                 if data in newlines:
                     yield stdout_prefix + current_stdout
                     current_stdout = ""
                 else:
                     current_stdout += data
+            elif data in newlines:
+                yield stderr_prefix + current_stderr
+                current_stderr = ""
             else:
-                if data in newlines:  # noqa
-                    yield stderr_prefix + current_stderr
-                    current_stderr = ""
-                else:
-                    current_stderr += data
+                current_stderr += data
         else:
             continue
 
