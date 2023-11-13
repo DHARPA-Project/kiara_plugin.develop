@@ -1,15 +1,15 @@
 [project]
-name = "test-env"
+name = "kiara-plugin-{{ cookiecutter.project_slug }}"
 version = "0.1.0"
-description = "Add a short description here"
-authors = ["Markus Binsteiner <markus@frkl.io>"]
+description = "{{ cookiecutter.project_short_description }}"
+authors = ["{{ cookiecutter.full_name }} <{{ cookiecutter.email }}>"]
 channels = ["conda-forge", "dharpa"]
 platforms = ["linux-64", "win-64", "osx-64", "osx-arm64"]
 
 [tasks]
 install-dev-env = "pip install -e '.[dev_utils]'"
 kiara = "kiara"
-show-version = "kiara --version"
+show-versions = "kiara --version"
 delete-context = "kiara context delete"
 
 [dependencies]
