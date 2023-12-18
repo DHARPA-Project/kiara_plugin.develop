@@ -1,0 +1,19 @@
+operation: mock
+module_config:
+  title: dummy_and
+  desc: dummy_desc
+  inputs_schema:
+    a:
+      type: boolean
+      doc: The first input.
+    b:
+      type: boolean
+      doc: The second input.
+  outputs_schema:
+    y:
+      type: boolean
+      doc: The output.
+      result_value: true
+inputs:
+  a: true
+  b: true
