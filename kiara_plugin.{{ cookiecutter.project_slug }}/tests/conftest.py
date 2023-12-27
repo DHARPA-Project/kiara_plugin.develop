@@ -20,7 +20,7 @@ import pytest
 from kiara.context import KiaraConfig
 from kiara.interfaces.python_api import KiaraAPI
 from kiara.interfaces.python_api.models.job import JobTest, JobDesc
-from kiara.utils.testing import get_tests_for_job, list_job_descs
+from kiara.utils.testing import get_tests_for_job, list_job_descs, get_init_job
 
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 JOBS_FOLDER = Path(os.path.join(ROOT_DIR, "examples", "jobs"))
@@ -46,6 +46,25 @@ def kiara_api() -> KiaraAPI:
     api = KiaraAPI(kc)
     return api
 
+@pytest.fixture
+def kiara_api_init_example() -> KiaraAPI:
+    instance_path = create_temp_dir()
+    kc = KiaraConfig.create_in_folder(instance_path)
+    api = KiaraAPI(kc)
+
+    init_job = get_init_job(JOBS_FOLDER)
+    if init_job is None:
+        return api
+
+    results = api.run_job(init_job)
+
+    if not init_job.save:
+        return api
+
+    for field_name, alias_name in init_job.save.items():
+        api.store_value(results[field_name], alias_name)
+
+    return api
 
 @pytest.fixture(params=list_job_descs(JOBS_FOLDER), ids=get_job_alias)
 def example_job_test(request, kiara_api) -> JobTest:
