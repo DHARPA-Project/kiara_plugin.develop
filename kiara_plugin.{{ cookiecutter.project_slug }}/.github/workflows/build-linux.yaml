@@ -39,16 +39,16 @@ jobs:
           format: cobertura
           file: coverage.xml
 
- coverage:
-   name: test coverage
-   runs-on: ubuntu-latest
-   needs:
-     - test-linux
-   steps:
-     - name: Coveralls Finished
-       uses: coverallsapp/github-action@v2
-       with:
-         parallel-finished: true
+  coverage:
+    name: test coverage
+    runs-on: ubuntu-latest
+    needs:
+      - test-linux
+    steps:
+      - name: Coveralls Finished
+        uses: coverallsapp/github-action@v2
+        with:
+          parallel-finished: true
 
   mypy-linux:
     name: mypy check on linux
