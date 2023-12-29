@@ -35,7 +35,7 @@ jobs:
         uses: coverallsapp/github-action@v2
         with:
           parallel: true
-          flag-name: run ${{ join(matrix.*, ' - ') }}
+          flag-name: run {% raw %}${{ join(matrix.*, ' - ') }}{% endraw %}
           format: cobertura
           file: coverage.xml
 
