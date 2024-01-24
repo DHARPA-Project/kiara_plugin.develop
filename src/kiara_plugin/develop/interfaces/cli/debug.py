@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
+import sys
 import typing
+import uuid
 
 import rich_click as click
 from rich.table import Table
 
-from kiara.utils.cli import terminal_print_model
+from kiara.utils.cli import terminal_print, terminal_print_model
 
 #  Copyright (c) 2021, Markus Binsteiner
 #
@@ -21,16 +23,53 @@ def debug(ctx):
     """Kiara context related sub-commands."""
 
 
-@debug.command("print-jobs")
+@debug.group("job")
+@click.pass_context
+def jobs(ctx):
+    """Kiara job related sub-commands."""
+
+
+@jobs.command("list")
 @click.pass_context
 def print_jobs(ctx):
     """Print stored jobs."""
+
+    from kiara.interfaces.python_api.models.info import JobInfos
 
     kiara: Kiara = ctx.obj.kiara  # type: ignore
 
     all_records = kiara.job_registry.retrieve_all_job_records()
 
-    terminal_print_model(*all_records.values())
+    # infos = {}
+    # for job in all_records.values():
+    #     job_info = JobInfo.create_from_instance(kiara=kiara, instance=job)
+    #     infos[str(job_info.job_record.job_id)] = job_info
+
+
+    all_infos = JobInfos.create_from_instances(kiara=kiara, instances=all_records)
+    terminal_print_model(all_infos, in_panel="Jobs")
+
+@jobs.command("explain")
+@click.argument("job_id")
+@click.pass_context
+def explain_job(ctx, job_id: str):
+    """Print details of a job."""
+
+    from kiara.interfaces.python_api.models.info import JobInfo
+
+    kiara: Kiara = ctx.obj.kiara  # type: ignore
+
+    try:
+        _job_id = uuid.UUID(job_id)
+    except Exception:
+        terminal_print()
+        terminal_print("Invalid job id. Must be a valid UUID.")
+        sys.exit(1)
+
+    job = kiara.job_registry.get_job_record(_job_id)
+
+    info = JobInfo.create_from_instance(kiara=kiara, instance=job)
+    terminal_print_model(info, in_panel=f"Details for job: {job_id}")
 
 
 @debug.command("print-workflows")

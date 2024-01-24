@@ -67,7 +67,7 @@ def kiara_api_init_example() -> KiaraAPI:
     return api
 
 @pytest.fixture(params=list_job_descs(JOBS_FOLDER), ids=get_job_alias)
-def example_job_test(request, kiara_api) -> JobTest:
+def example_job_test(request, kiara_api_init_example) -> JobTest:
 
     job_tests_folder = Path(os.path.join(ROOT_DIR, "tests", "job_tests"))
 
@@ -76,7 +76,7 @@ def example_job_test(request, kiara_api) -> JobTest:
         job_alias=job_desc.job_alias, job_tests_folder=job_tests_folder
     )
 
-    job_test = JobTest(kiara_api=kiara_api, job_desc=job_desc, tests=tests)
+    job_test = JobTest(kiara_api=kiara_api_init_example, job_desc=job_desc, tests=tests)
     return job_test
 
 
