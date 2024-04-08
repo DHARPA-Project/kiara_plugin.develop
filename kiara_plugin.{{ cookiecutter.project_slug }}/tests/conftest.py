@@ -18,8 +18,8 @@ from pathlib import Path
 import pytest
 
 from kiara.context import KiaraConfig
-from kiara.interfaces.python_api import KiaraAPI
-from kiara.interfaces.python_api.models.job import JobTest, JobDesc
+from kiara.api import KiaraAPI, JobDesc
+from kiara.interfaces.python_api.models.job import JobTest
 from kiara.utils.testing import get_tests_for_job, list_job_descs, get_init_job
 
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))

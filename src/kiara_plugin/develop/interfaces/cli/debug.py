@@ -46,7 +46,7 @@ def print_jobs(ctx):
     #     infos[str(job_info.job_record.job_id)] = job_info
 
 
-    all_infos = JobInfos.create_from_instances(kiara=kiara, instances=all_records)
+    all_infos = JobInfos.create_from_instances(kiara=kiara, instances={ str(k): v for k, v in all_records.items() })
     terminal_print_model(all_infos, in_panel="Jobs")
 
 @jobs.command("explain")
