@@ -56,7 +56,7 @@ def kiara_api_init_example() -> KiaraAPI:
     if init_job is None:
         return api
 
-    results = api.run_job(init_job)
+    results = api.run_job(operation=init_job, comment="init job for tests in package '{{ cookiecutter.project_slug }}'")
 
     if not init_job.save:
         return api
