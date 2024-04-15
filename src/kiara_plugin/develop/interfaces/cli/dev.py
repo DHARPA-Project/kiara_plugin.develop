@@ -276,7 +276,7 @@ def create_archive_for_tests(ctx, job_desc: str, target_archive: str):
     job_desc = "/home/markus/projects/kiara/kiara_plugin.core_types/examples/jobs/logic_and_true.yaml"
     results = api.run_job(job_desc, comment="comment")
 
-    stored = api.export_values(target_archive=target_archive_path, values=results)
+    stored = api.export_values(target_archive=target_archive_path, values=results, alias_map=True)
 
     terminal_print_model(stored, in_panel="Exported values")
 
