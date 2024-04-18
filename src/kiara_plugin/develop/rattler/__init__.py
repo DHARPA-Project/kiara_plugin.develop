@@ -2,7 +2,7 @@
 import os
 import shutil
 from pathlib import Path
-from typing import Union
+from typing import List, Union
 
 from diskcache import Cache
 
@@ -156,7 +156,10 @@ class RattlerBuildEnvMgmt(object):
             if not user:
                 raise Exception("Can't upload package, no user provided.")
 
-        args = ["upload", "anaconda", "--channel", channel]
+        if not channel:
+            raise Exception("Can't upload package, no channel provided.")
+
+        args: List[str] = ["upload", "anaconda", "--channel", channel]
         if user:
             args.extend(["--owner", user])
 
