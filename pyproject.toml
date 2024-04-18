@@ -258,6 +258,7 @@ plugins = [
 [[tool.mypy.overrides]]
 module = [
     "appdirs.*",
+    "build.*",
     "diskcache.*",
     "license_expression.*",
     "pydantic2ts.*",

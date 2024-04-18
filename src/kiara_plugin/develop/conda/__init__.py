@@ -156,7 +156,7 @@ class CondaEnvMgmt(object):
         if not Path(artifact).is_file():
             raise Exception(f"Invalid artifact path: {artifact}")
 
-        result = CondaBuildPackageDetails(
+        result_details: CondaBuildPackageDetails = CondaBuildPackageDetails(
             cmd=conda_bin,
             args=args[1:],
             stdout=result.stdout,
@@ -168,7 +168,7 @@ class CondaEnvMgmt(object):
             package=package,
             build_artifact=artifact,
         )
-        return result
+        return result_details
 
     def upload_package(
             self,

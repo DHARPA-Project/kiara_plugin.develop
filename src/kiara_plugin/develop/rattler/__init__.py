@@ -114,7 +114,7 @@ class RattlerBuildEnvMgmt(object):
         if not artifact.is_file():
             raise Exception(f"Invalid artifact path (not a file): {artifact.as_posix()}")
 
-        result = CondaBuildPackageDetails(
+        result_details = CondaBuildPackageDetails(
             cmd=rattler_build_bin,
             args=args[1:],
             stdout=result.stdout,
@@ -126,7 +126,7 @@ class RattlerBuildEnvMgmt(object):
             package=package,
             build_artifact=artifact.as_posix()
         )
-        return result
+        return result_details
 
     def upload_package(
             self,

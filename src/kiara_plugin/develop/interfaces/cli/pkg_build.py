@@ -71,6 +71,22 @@ def build_package_from_spec(
             )
             sys.exit(1)
 
+    if publish and not user:
+        if not os.environ.get("ANACONDA_OWNER"):
+            terminal_print()
+            terminal_print(
+                "Package publishing enabled, but no user provided. Either use the '--user' cli option or populate the 'ANACONDA_OWNER' environment variable."
+            )
+            sys.exit(1)
+
+    if publish and not channel:
+        if not os.environ.get("ANACONDA_CHANNEL"):
+            terminal_print()
+            terminal_print(
+                "Package publishing enabled, but no channel provided. Use the '--channel' cli option to set."
+            )
+            sys.exit(1)
+
     from kiara.utils.files import get_data_from_file
     from kiara_plugin.develop.conda import PkgSpec
     from kiara_plugin.develop.rattler import RattlerBuildEnvMgmt
@@ -221,6 +237,22 @@ def build_package(
             terminal_print()
             terminal_print(
                 "Package publishing enabled, but no token provided. Either use the '--token' cli option or populate the 'ANACONDA_PUSH_TOKEN' environment variable."
+            )
+            sys.exit(1)
+
+    if publish and not user:
+        if not os.environ.get("ANACONDA_OWNER"):
+            terminal_print()
+            terminal_print(
+                "Package publishing enabled, but no user provided. Either use the '--user' cli option or populate the 'ANACONDA_OWNER' environment variable."
+            )
+            sys.exit(1)
+
+    if publish and not channel:
+        if not os.environ.get("ANACONDA_CHANNEL"):
+            terminal_print()
+            terminal_print(
+                "Package publishing enabled, but no channel provided. Use the '--channel' cli option to set."
             )
             sys.exit(1)
 

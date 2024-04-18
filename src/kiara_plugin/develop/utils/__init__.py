@@ -5,9 +5,10 @@ import selectors
 import subprocess
 from pathlib import Path
 from subprocess import Popen
-from typing import Callable, Generator, Union
+from typing import TYPE_CHECKING, Callable, Generator, Union
 
-from kiara_plugin.develop.conda import RunDetails
+if TYPE_CHECKING:
+    from kiara_plugin.develop.conda.models import RunDetails
 
 newlines = ["\n", "\r\n", "\r"]
 
@@ -55,12 +56,12 @@ def unbuffered(
 
 
 class ExecutionException(Exception):
-    def __init__(self, msg, run_details: RunDetails):
+    def __init__(self, msg, run_details: "RunDetails"):
         self._run_details = run_details
         super().__init__(msg)
 
     @property
-    def run_details(self) -> RunDetails:
+    def run_details(self) -> "RunDetails":
         return self._run_details
 
 
@@ -71,7 +72,9 @@ def execute(
     stderr_callback: Union[Callable, None] = None,
     cwd: Union[None, str, Path] = None,
     env_vars: Union[None, dict] = None,
-) -> RunDetails:
+) -> "RunDetails":
+
+    from kiara_plugin.develop.conda.models import RunDetails
 
     stdout_output = []
     stderr_output = []

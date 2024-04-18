@@ -135,6 +135,30 @@ jobs:
       - name: publish to PyPI  # make sure you have pypi trusted publishing configured for this repo
         uses: pypa/gh-action-pypi-publish@release/v1
 
+#  build_conda_package:
+#    name: conda package build (and upload if release)
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: "Set up Python 3.11"
+#        uses: actions/setup-python@v4
+#        with:
+#          python-version: "3.11"
+#      - name: pip cache
+#        id: pip-cache
+#        uses: actions/cache@v3
+#        with:
+#          path: ~/.cache/pip
+#          key: ${{ runner.os }}-pip-${{ hashFiles('**/setup.*') }}
+#      - uses: actions/checkout@v3
+#        with:
+#          fetch-depth: 0
+#      - name: install kiara
+#        run: pip install kiara
+#      - name: install required plugin packages
+#        run: pip install git+https://github.com/DHARPA-Project/kiara_plugin.develop.git@develop
+#      - name: build conda package
+#        run: kiara build conda pkg --patch-data ci/conda/conda-pkg-patch.yaml .
+
   build_and_release_conda_package:
     name: conda package build (and upload if release)
     runs-on: ubuntu-latest
