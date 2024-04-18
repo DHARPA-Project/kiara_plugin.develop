@@ -51,6 +51,7 @@ dependencies = [
     "kiara_plugin.core_types>=0.5.1,<0.6.0",
     "kiara_plugin.tabular>=0.5.0,<0.6.0",
     "kiara_plugin.onboarding>=0.5.0,<0.6.0",
+    "build>=1.2.1",
     "diskcache>=5.4.0",
     "httpx>=0.23.0",
     "pydantic-to-typescript>=1.0.10",
