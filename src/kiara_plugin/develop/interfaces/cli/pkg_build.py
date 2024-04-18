@@ -98,7 +98,7 @@ def build_package_from_spec(
 
     pkg_result = rattler_mgmt.build_package(pkg)
     if publish:
-        rattler_mgmt.upload_package(pkg_result, token=token, user=user, channel=channel)
+        rattler_mgmt.upload_package(pkg_result, token=token, user=user, channel=channel)  # type: ignore
 
 
 @conda.command("pkg-spec")
@@ -256,6 +256,7 @@ def build_package(
             )
             sys.exit(1)
 
+
     rattler_mgmt: RattlerBuildEnvMgmt = RattlerBuildEnvMgmt()
 
     _patch_data: Any = None
@@ -277,6 +278,6 @@ def build_package(
     terminal_print("Building package...")
     pkg_result = rattler_mgmt.build_package(_pkg)
     if publish:
-        rattler_mgmt.upload_package(pkg_result, token=token, user=user, channel=channel)
+        rattler_mgmt.upload_package(pkg_result, token=token, user=user, channel=channel)  # type: ignore
 
     terminal_print(pkg_result)

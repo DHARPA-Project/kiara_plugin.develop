@@ -131,7 +131,7 @@ class RattlerBuildEnvMgmt(object):
     def upload_package(
             self,
             build_result: Union[CondaBuildPackageDetails, str, Path],
-            channel: str,
+            channel: Union[str, None] = None,
             token: Union[str, None] = None,
             user: Union[None, str] = None,
     ):
