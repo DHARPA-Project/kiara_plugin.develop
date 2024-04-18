@@ -65,3 +65,5 @@ ci/conda/kiara_plugin.develop/
 .pixi
 pixi.lock
 dev.py
+recipe/
+output/

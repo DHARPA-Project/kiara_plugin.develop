@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # helper function, from: https://gist.github.com/thelinuxkid/5114777
+import os
 import selectors
 import subprocess
 from pathlib import Path
@@ -69,11 +70,17 @@ def execute(
     stdout_callback: Union[Callable, None] = None,
     stderr_callback: Union[Callable, None] = None,
     cwd: Union[None, str, Path] = None,
+    env_vars: Union[None, dict] = None,
 ) -> RunDetails:
 
     stdout_output = []
     stderr_output = []
     _args = list(args)
+
+    process_env_vars = os.environ.copy()
+    if env_vars:
+        process_env_vars.update(env_vars)
+
     with subprocess.Popen(
         [cmd,*_args],
         shell=False,
@@ -81,6 +88,7 @@ def execute(
         stderr=subprocess.PIPE,
         universal_newlines=True,
         cwd=cwd,
+        env=process_env_vars
     ) as proc:
         for line in unbuffered(proc, stdout_prefix="o-", stderr_prefix="e-"):
             if line.startswith("o-"):

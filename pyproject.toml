@@ -53,7 +53,11 @@ dependencies = [
     "kiara_plugin.onboarding>=0.5.0,<0.6.0",
     "diskcache>=5.4.0",
     "httpx>=0.23.0",
-    "pydantic-to-typescript>=1.0.10"
+    "pydantic-to-typescript>=1.0.10",
+    "license-expression>=30.3.0",
+    "setuptools>=64",
+    "setuptools_scm[toml]>8",
+    "wheel"
 ]
 dynamic = ["version"]
 
@@ -81,6 +85,7 @@ develop = "kiara_plugin.develop"
 debug = "kiara_plugin.develop.interfaces.cli.debug:debug"
 dev = "kiara_plugin.develop.interfaces.cli.dev:dev_group"
 conda = "kiara_plugin.develop.interfaces.cli.conda:conda"
+build = "kiara_plugin.develop.interfaces.cli.pkg_build:pkg_build"
 
 
 [project.entry-points."kiara.data_types"]
@@ -254,6 +259,7 @@ plugins = [
 module = [
     "appdirs.*",
     "diskcache.*",
+    "license_expression.*",
     "pydantic2ts.*",
     "pyarrow.*",
     "ruamel.*"

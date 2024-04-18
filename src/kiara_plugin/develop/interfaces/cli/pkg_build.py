@@ -13,22 +13,23 @@ from typing import Any, Union
 import rich_click as click
 
 from kiara.utils.cli import terminal_print
-from kiara_plugin.develop.utils.pkg_utils import (
-    create_pkg_spec,
-    get_pkg_metadata,
-)
 
 # if typing.TYPE_CHECKING:
 #     from kiara_plugin.develop.conda import CondaEnvMgmt
 
 
-@click.group("conda")
+@click.group("build")
+@click.pass_context
+def pkg_build(ctx):
+    """Package build related sub-commands."""
+
+@pkg_build.group()
 @click.pass_context
 def conda(ctx):
-    """Conda environment related sub-commands."""
+    """Rattler-build environment related sub-commands."""
 
 
-@conda.command()
+@conda.command("pkg-from-spec")
 @click.argument("pkg_spec", nargs=1, required=True)
 @click.option(
     "--publish", "-p", is_flag=True, help="Whether to upload the built package."
@@ -45,6 +46,12 @@ def conda(ctx):
     help="If publishing is enabled, use this token to authenticate.",
     required=False,
 )
+@click.option(
+    "--channel",
+    "-c",
+    help="The conda channel to publis to.",
+    required=False
+)
 @click.pass_context
 def build_package_from_spec(
     ctx,
@@ -52,6 +59,7 @@ def build_package_from_spec(
     publish: bool = False,
     token: Union[str, None] = None,
     user: Union[str, None] = None,
+    channel: Union[str, None] = None,
 ):
     """Create a conda environment."""
 
@@ -64,26 +72,27 @@ def build_package_from_spec(
             sys.exit(1)
 
     from kiara.utils.files import get_data_from_file
-    from kiara_plugin.develop.conda import CondaEnvMgmt, PkgSpec
+    from kiara_plugin.develop.conda import PkgSpec
+    from kiara_plugin.develop.rattler import RattlerBuildEnvMgmt
 
-    conda_mgmt: CondaEnvMgmt = CondaEnvMgmt()
+    rattler_mgmt: RattlerBuildEnvMgmt = RattlerBuildEnvMgmt()
 
     recipe_data = get_data_from_file(pkg_spec)
     pkg = PkgSpec(**recipe_data)
 
-    pkg_result = conda_mgmt.build_package(pkg)
+    pkg_result = rattler_mgmt.build_package(pkg)
     if publish:
-        conda_mgmt.upload_package(pkg_result, token=token, user=user)
+        rattler_mgmt.upload_package(pkg_result, token=token, user=user, channel=channel)
 
 
-@conda.command()
+@conda.command("pkg-spec")
 @click.argument("pkg")
 @click.option("--version", "-v", help="The version of the package.", required=False)
 @click.option(
     "--format",
     "-f",
     help="The format of the metadata.",
-    type=click.Choice(["spec", "conda", "mamba", "raw"]),
+    type=click.Choice(["spec", "rattler-build", "raw"]),
     default="spec",
 )
 @click.option(
@@ -113,6 +122,7 @@ def build_package_spec(
     from rich.syntax import Syntax
 
     from kiara.utils.json import orjson_dumps
+    from kiara_plugin.develop.utils.pkg_utils import create_pkg_spec, get_pkg_metadata
 
     if output:
         o = Path(output)
@@ -131,18 +141,19 @@ def build_package_spec(
     )
 
     spec = create_pkg_spec(pkg_metadata=pkg_metadata, patch_data=_patch_data)
+
     if format == "raw":
-        pkg_out: str = orjson_dumps(pkg_metadata, option=orjson.OPT_INDENT_2)
+        pkg_out: Union[str, Syntax] = orjson_dumps(pkg_metadata, option=orjson.OPT_INDENT_2)
         if not output:
-            pkg_out = Syntax(pkg_out, "json")  # type: ignore
+            pkg_out = Syntax(pkg_out, "json", background_color="default")  # type: ignore
     elif format == "spec":
         pkg_out = spec.model_dump_json(indent=2)
         if not output:
-            pkg_out = Syntax(pkg_out, "json")  # type: ignore
-    elif format == "conda":
-        pkg_out = spec.create_conda_spec()
-    elif format == "mamba":
-        pkg_out = spec.create_boa_recipe()
+            pkg_out = Syntax(pkg_out, "json", background_color="default")  # type: ignore
+    elif format == "rattler-build":
+        pkg_out = spec.create_rattler_build_recipe()
+        if not output:
+            pkg_out = Syntax(pkg_out, "yaml", background_color="default")  # type: ignore
     else:
         terminal_print()
         terminal_print(f"Invalid format: {format}.")
@@ -152,13 +163,13 @@ def build_package_spec(
         terminal_print(pkg_out)
     else:
         o = Path(output)
-        o.mkdir(parents=True, exist_ok=True)
+        o.parent.mkdir(parents=True, exist_ok=True)
         if o.exists():
             os.unlink(o)
-        o.write_text(pkg_out)
+        o.write_text(pkg_out)  # type: ignore
 
 
-@conda.command()
+@conda.command("pkg")
 @click.argument("pkg")
 @click.option("--version", "-v", help="The version of the package.", required=False)
 @click.option(
@@ -172,6 +183,12 @@ def build_package_spec(
     "-u",
     help="If publishing is enabled, use this anaconda user instead of the one directly associated with the token.",
     required=False,
+)
+@click.option(
+    "--channel",
+    "-c",
+    help="The conda channel to publis to.",
+    required=False
 )
 @click.option(
     "--token",
@@ -190,12 +207,14 @@ def build_package(
     publish: bool = False,
     user: Union[str, None] = None,
     token: Union[str, None] = None,
+    channel: Union[str, None] = None,
     patch_data: Union[str, None] = None,
     force_version: bool = False,
 ):
     """Create a conda environment."""
 
-    from kiara_plugin.develop.conda import CondaEnvMgmt
+    from kiara_plugin.develop.rattler import RattlerBuildEnvMgmt
+    from kiara_plugin.develop.utils.pkg_utils import create_pkg_spec, get_pkg_metadata
 
     if publish and not token:
         if not os.environ.get("ANACONDA_PUSH_TOKEN"):
@@ -205,7 +224,7 @@ def build_package(
             )
             sys.exit(1)
 
-    conda_mgmt: CondaEnvMgmt = CondaEnvMgmt()
+    rattler_mgmt: RattlerBuildEnvMgmt = RattlerBuildEnvMgmt()
 
     _patch_data: Any = None
     if patch_data:
@@ -224,8 +243,8 @@ def build_package(
     terminal_print(_pkg.create_conda_spec())
     terminal_print()
     terminal_print("Building package...")
-    pkg_result = conda_mgmt.build_package(_pkg)
+    pkg_result = rattler_mgmt.build_package(_pkg)
     if publish:
-        conda_mgmt.upload_package(pkg_result, token=token, user=user)
+        rattler_mgmt.upload_package(pkg_result, token=token, user=user, channel=channel)
 
     terminal_print(pkg_result)
