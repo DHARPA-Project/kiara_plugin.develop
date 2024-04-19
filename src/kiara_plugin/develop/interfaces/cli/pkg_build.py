@@ -339,11 +339,11 @@ def publish_conda_pkgs(ctx, artifact_or_folder,
     artifacts = []
     for artifact in artifact_or_folder:
 
-        path = Path(artifact)
+        path = Path(os.path.expanduser(artifact)).absolute()
 
         if not path.exists():
             terminal_print()
-            terminal_print(f"Path does not exist: {path}")
+            terminal_print(f"Path does not exist: {path.as_posix()}")
             sys.exit(1)
 
         if path.is_file():
