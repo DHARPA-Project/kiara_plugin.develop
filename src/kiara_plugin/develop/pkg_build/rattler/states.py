@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import os
 import platform
-import urllib
 from pathlib import Path
 from typing import Any, Dict, Mapping, Union
+from urllib.request import urlopen
 
 from kiara.utils.cli import terminal_print
 from kiara_plugin.develop.pkg_build.states import State
@@ -75,7 +75,7 @@ class RattlerBuildAvailable(State):
         target_path = Path(os.path.join(root_path, "bin", "rattler-build"))
         target_path.parent.mkdir(parents=True, exist_ok=True)
 
-        with urllib.request.urlopen(url) as response:  # type: ignore  # noqa
+        with urlopen(url) as response:  # noqa
             with open(target_path, "wb") as f:  # open a file in write-binary mode
                 f.write(response.read())  # write the content to the file
 
