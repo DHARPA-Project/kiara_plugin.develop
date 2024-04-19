@@ -140,7 +140,7 @@ class RattlerBuildEnvMgmt(object):
             output_folder_path.mkdir(parents=True, exist_ok=True)
             for artifact in artefacts:
                 artifact_path = shutil.copy(artifact, output_folder_path)
-                all_artifacts.append(artifact_path.as_posix())
+                all_artifacts.append(artifact_path)
         else:
             all_artifacts = [artifact.as_posix() for artifact in artefacts]
 
