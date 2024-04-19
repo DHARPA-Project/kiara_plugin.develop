@@ -99,7 +99,7 @@ jobs:
           pip install -U ruff
       # Include `--format=github` to enable automatic inline annotations.
       - name: Run Ruff
-        run: ruff --output-format=github src/
+        run: ruff check --output-format=github src/
 
   build_python_package:
     name: build python package
@@ -119,9 +119,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: install pip
-        run: pip install -U pip setuptools setuptools_scm wheel
-      - name: install 'build' package
-        run: pip install -U build
+        run: pip install -U pip setuptools setuptools_scm wheel build
       - name: create packages
         run: python -m build
       - name: upload artifacts
@@ -140,8 +138,6 @@ jobs:
       - linting-linux
       - build_conda_package
       - build_python_package
-    env:
-        GEMFURY_PUSH_TOKEN: ${{ secrets.GEMFURY_PUSH_TOKEN }}
     permissions:
       id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
     steps:
@@ -175,7 +171,7 @@ jobs:
       - name: install required plugin packages
         run: pip install git+https://github.com/DHARPA-Project/kiara_plugin.develop.git@develop
       - name: build conda package
-        run: kiara build conda pkg --patch-data ci/conda/conda-pkg-patch.yaml --output-folder build-dir .
+        run: kiara build conda pkg --channel dharpa --channel conda-forge --patch-data ci/conda/conda-pkg-patch.yaml --output-folder build-dir .
       - name: upload artifacts
         uses: actions/upload-artifact@v4
         with:
