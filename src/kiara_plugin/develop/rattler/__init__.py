@@ -170,7 +170,7 @@ class RattlerBuildEnvMgmt(object):
         artifacts: List[Path] = []
         for artifact in artifacts_or_folder:
 
-            path = Path(os.path.expanduser(artifact))
+            path = Path(os.path.expanduser(artifact)).absolute()
 
             if not path.exists():
                 raise Exception(f"Path does not exist: {path}")
