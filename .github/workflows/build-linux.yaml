@@ -8,7 +8,7 @@ jobs:
 #    name: lint commit message
 #    runs-on: ubuntu-latest
 #    steps:
-#      - uses: actions/checkout@v3
+#      - uses: actions/checkout@v4
 #        with:
 #          fetch-depth: 0
 #      - uses: wagoid/commitlint-github-action@v4
@@ -21,7 +21,7 @@ jobs:
         python_version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
     steps:
       - name: "Set up Python ${{ matrix.python_version }}"
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "${{ matrix.python_version }}"
       - name: pip cache
@@ -30,7 +30,7 @@ jobs:
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ matrix.python_version }}
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: install kiara_plugin.develop
         run: pip install -U .[dev_testing]
       - name: display installed kiara and module package versions
@@ -64,7 +64,7 @@ jobs:
         python_version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
     steps:
       - name: "Set up Python ${{ matrix.python_version }}"
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "${{ matrix.python_version }}"
       - name: pip cache
@@ -73,7 +73,7 @@ jobs:
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ matrix.python_version }}
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: install kiara_plugin.develop
         run: pip install -U .[dev_testing]
       - name: Test with mypy
@@ -82,9 +82,9 @@ jobs:
   linting-linux:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - name: pip cache
@@ -106,7 +106,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set up Python 3.12
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - name: pip cache
@@ -115,7 +115,7 @@ jobs:
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-3.12
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: install pip
@@ -158,7 +158,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Set up Python 3.12"
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - name: pip cache
@@ -167,7 +167,7 @@ jobs:
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-3.12
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: install kiara
@@ -199,7 +199,7 @@ jobs:
           name: conda-pkgs
           path: build-dir/
       - name: "Set up Python 3.12"
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - name: pip cache
@@ -208,7 +208,7 @@ jobs:
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-3.12
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: install kiara
@@ -227,7 +227,7 @@ jobs:
 #      - linting-linux
 #    steps:
 #      - name: "Set up Python 3.11"
-#        uses: actions/setup-python@v4
+#        uses: actions/setup-python@v5
 #        with:
 #          python-version: "3.11"
 #      - name: pip cache
@@ -236,7 +236,7 @@ jobs:
 #        with:
 #          path: ~/.cache/pip
 #          key: ${{ runner.os }}-pip-${{ hashFiles('**/setup.*') }}
-#      - uses: actions/checkout@v3
+#      - uses: actions/checkout@v4
 #        with:
 #          fetch-depth: 0
 #      - name: install kiara
@@ -260,7 +260,7 @@ jobs:
       - release_python_package
       - release_conda_package
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
     - run: git config --global user.email "markus@frkl.io"
