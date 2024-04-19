@@ -24,6 +24,12 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "${{ matrix.python_version }}"
+      - name: pip cache
+        id: pip-cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ matrix.python_version }}
       - uses: actions/checkout@v3
       - name: install kiara_plugin.develop
         run: pip install -U .[dev_testing]
@@ -61,6 +67,12 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "${{ matrix.python_version }}"
+      - name: pip cache
+        id: pip-cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ matrix.python_version }}
       - uses: actions/checkout@v3
       - name: install kiara_plugin.develop
         run: pip install -U .[dev_testing]
@@ -80,7 +92,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-312
+          key: ${{ runner.os }}-pip-3.12
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -102,7 +114,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-312
+          key: ${{ runner.os }}-pip-3.12
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
@@ -154,7 +166,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-312
+          key: ${{ runner.os }}-pip-3.12
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
@@ -185,7 +197,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: conda-pkgs
-          path: conda-pkgs/
+          path: build-dir/
       - name: "Set up Python 3.12"
         uses: actions/setup-python@v4
         with:
@@ -195,7 +207,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-312
+          key: ${{ runner.os }}-pip-3.12
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
@@ -204,7 +216,7 @@ jobs:
       - name: install required plugin packages
         run: pip install git+https://github.com/DHARPA-Project/kiara_plugin.develop.git@develop
       - name: release conda package
-        run: kiara build conda publish --user dharpa --channel dharpa --token ${{ secrets.ANACONDA_PUSH_TOKEN }} conda-pkgs
+        run: kiara build conda publish --user dharpa --channel dharpa --token ${{ secrets.ANACONDA_PUSH_TOKEN }} build-dir
 
 #  build_and_release_conda_package:
 #    name: conda package build (and upload if release)
