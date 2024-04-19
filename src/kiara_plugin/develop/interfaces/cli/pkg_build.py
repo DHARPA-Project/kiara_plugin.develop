@@ -14,9 +14,6 @@ import rich_click as click
 
 from kiara.utils.cli import terminal_print
 
-# if typing.TYPE_CHECKING:
-#     from kiara_plugin.develop.conda import CondaEnvMgmt
-
 
 @click.group("build")
 @click.pass_context
@@ -52,6 +49,7 @@ def conda(ctx):
     help="The conda channel to publis to.",
     required=False
 )
+@click.option("--output-folder", "-o", help="The output folder for the built package.", required=False)
 @click.pass_context
 def build_package_from_spec(
     ctx,
@@ -60,6 +58,7 @@ def build_package_from_spec(
     token: Union[str, None] = None,
     user: Union[str, None] = None,
     channel: Union[str, None] = None,
+    output_folder: Union[str, None] = None,
 ):
     """Create a conda environment."""
 
@@ -96,9 +95,9 @@ def build_package_from_spec(
     recipe_data = get_data_from_file(pkg_spec)
     pkg = PkgSpec(**recipe_data)
 
-    pkg_result = rattler_mgmt.build_package(pkg)
+    pkg_result = rattler_mgmt.build_package(pkg, output_folder=output_folder)
     if publish:
-        rattler_mgmt.upload_package(pkg_result, token=token, user=user, channel=channel)  # type: ignore
+        rattler_mgmt.upload_package(artifacts_or_folder=pkg_result.build_artifacts, token=token, user=user, channel=channel)  # type: ignore
 
 
 @conda.command("pkg-spec")
@@ -215,6 +214,7 @@ def build_package_spec(
 @click.option(
     "--force-version", help="Overwrite the Python package version number.", is_flag=True
 )
+@click.option("--output-folder", "-o", help="The output folder for the built package.", required=False)
 @click.pass_context
 def build_package(
     ctx,
@@ -226,6 +226,7 @@ def build_package(
     channel: Union[str, None] = None,
     patch_data: Union[str, None] = None,
     force_version: bool = False,
+    output_folder: Union[str, None] = None,
 ):
     """Create a conda environment."""
 
@@ -276,8 +277,87 @@ def build_package(
     terminal_print(_pkg.create_conda_spec())
     terminal_print()
     terminal_print("Building package...")
-    pkg_result = rattler_mgmt.build_package(_pkg)
+    pkg_result = rattler_mgmt.build_package(_pkg, output_folder=output_folder)
     if publish:
-        rattler_mgmt.upload_package(pkg_result, token=token, user=user, channel=channel)  # type: ignore
+        rattler_mgmt.upload_package(artifacts_or_folder=pkg_result.build_artifacts, token=token, user=user, channel=channel)  # type: ignore
 
     terminal_print(pkg_result)
+
+@conda.command("publish")
+@click.argument("artifact_or_folder", nargs=-1, required=True)
+@click.option(
+    "--user",
+    "-u",
+    help="If publishing is enabled, use this anaconda user instead of the one directly associated with the token.",
+    required=False,
+)
+@click.option(
+    "--channel",
+    "-c",
+    help="The conda channel to publis to.",
+    required=False
+)
+@click.option(
+    "--token",
+    "-t",
+    help="If publishing is enabled, use this token to authenticate.",
+    required=False,
+)
+@click.pass_context
+def publish_conda_pkgs(ctx, artifact_or_folder,
+    user: Union[str, None] = None,
+    token: Union[str, None] = None,
+    channel: Union[str, None] = None,):
+    """Publish one or several conda packages."""
+
+    from kiara_plugin.develop.rattler import RattlerBuildEnvMgmt
+
+    if not token:
+        if not os.environ.get("ANACONDA_PUSH_TOKEN"):
+            terminal_print()
+            terminal_print(
+                "Package publishing enabled, but no token provided. Either use the '--token' cli option or populate the 'ANACONDA_PUSH_TOKEN' environment variable."
+            )
+            sys.exit(1)
+
+    if not user:
+        if not os.environ.get("ANACONDA_OWNER"):
+            terminal_print()
+            terminal_print(
+                "Package publishing enabled, but no user provided. Either use the '--user' cli option or populate the 'ANACONDA_OWNER' environment variable."
+            )
+            sys.exit(1)
+
+    if not channel:
+        if not os.environ.get("ANACONDA_CHANNEL"):
+            terminal_print()
+            terminal_print(
+                "Package publishing enabled, but no channel provided. Use the '--channel' cli option to set."
+            )
+            sys.exit(1)
+
+    artifacts = []
+    for artifact in artifact_or_folder:
+
+        path = Path(artifact)
+
+        if not path.exists():
+            terminal_print()
+            terminal_print(f"Path does not exist: {path}")
+            sys.exit(1)
+
+        if path.is_file():
+            artifacts.append(path)
+        elif path.is_dir():
+            for f in path.iterdir():
+                if f.is_file() and (f.name.endswith(".tar.bz2") or f.name.endswith(".conda")):
+                    artifacts.append(f)
+
+    terminal_print()
+    terminal_print("Publishing conda packages:")
+    for artifact in artifacts:
+        terminal_print(f"  - {artifact}")
+
+
+    rattler_mgmt: RattlerBuildEnvMgmt = RattlerBuildEnvMgmt()
+    rattler_mgmt.upload_package(artifacts_or_folder=artifacts, token=token, user=user, channel=channel)  # type: ignore

@@ -67,3 +67,4 @@ pixi.lock
 dev.py
 recipe/
 output/
+build-dir/

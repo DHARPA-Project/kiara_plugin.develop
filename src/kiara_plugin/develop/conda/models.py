@@ -164,8 +164,9 @@ class CondaBuildPackageDetails(RunDetails):
     package: PkgSpec = Field(description="Package metadata.")
     build_artifact: str = Field(description="Path to the package build artifact.")
 
-class RattlerBuildPackageDetails(RunDetails):
+class RattlerBuildPackageDetails(BaseModel):
 
+    run_details: List[RunDetails] = Field(description="The run details.")
     base_dir: str = Field(description="The base directory.")
     build_dir: str = Field(description="The build directory.")
     meta_file: str = Field(description="The path to the package meta file.")

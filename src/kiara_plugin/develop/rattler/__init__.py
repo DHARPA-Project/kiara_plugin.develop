@@ -8,8 +8,9 @@ from diskcache import Cache
 
 from kiara.utils.cli import terminal_print
 from kiara_plugin.develop.conda.models import (
-    CondaBuildPackageDetails,
     PkgSpec,
+    RattlerBuildPackageDetails,
+    RunDetails,
 )
 from kiara_plugin.develop.conda.states import (
     States,
@@ -48,8 +49,8 @@ class RattlerBuildEnvMgmt(object):
         return self._states.get_state_details(state_id)
 
     def build_package(
-        self, package: PkgSpec, python_version=DEFAULT_PYTHON_VERSION, package_format: str = "tarbz2"
-    ) -> CondaBuildPackageDetails:
+        self, package: PkgSpec, python_version=DEFAULT_PYTHON_VERSION, package_formats: Union[str, List[str]] = ["tarbz2", "conda"], output_folder: Union[str, None]=None
+    ) -> RattlerBuildPackageDetails:
 
         build_env_details = self.get_state_details("rattler-build-available")
         rattler_build_bin = build_env_details["rattler_build_bin"]
@@ -88,60 +89,99 @@ class RattlerBuildEnvMgmt(object):
         args.extend(channels)
         args.extend(["--output-dir", build_dir.as_posix()])
 
-        args.append("--package-format")
-        args.append(package_format)
+        if isinstance(package_formats, str):
+            package_formats = [package_formats]
 
-        result = execute(
-            rattler_build_bin,
-            *args,
-            stdout_callback=default_stdout_print,
-            stderr_callback=default_stderr_print,
-        )
+        if not package_formats:
+            raise Exception("No package formats provided.")
+
+        all_run_details = []
+        for package_format in package_formats:
+
+            pkg_format_args = args.copy()
+            pkg_format_args.append("--package-format")
+            pkg_format_args.append(package_format)
+
+            result = execute(
+                rattler_build_bin,
+                *pkg_format_args,
+                stdout_callback=default_stdout_print,
+                stderr_callback=default_stderr_print,
+            )
+
+            run_details = RunDetails(
+                cmd=rattler_build_bin,
+                args=pkg_format_args[1:],
+                stdout=result.stdout,
+                stderr=result.stderr,
+                exit_code=result.exit_code
+            )
+            all_run_details.append(run_details)
+
 
         artefact_stem = f"{package.pkg_name}-{package.pkg_version}-*"
-
-        output_folder = os.path.join(build_dir, "noarch")
+        build_output_folder = os.path.join(build_dir, "noarch")
         # find files matching artefact_stem in output folder using globs
 
-        artefacts = list(Path(output_folder).glob(artefact_stem))
+        artefacts = list(Path(build_output_folder).glob(artefact_stem))
 
         if not artefacts:
-            raise Exception(f"No build artifact found in: {output_folder}")
-        elif len(artefacts) > 1:
-            raise Exception(f"Multiple build artifacts found in: {output_folder}")
+            raise Exception(f"No build artifact found in: {build_output_folder}")
+        elif len(artefacts) != len(package_formats):
+            raise Exception(f"Invalid number of build artifacts found in: {build_output_folder}")
 
-        artifact = artefacts[0]
-        if not artifact.is_file():
-            raise Exception(f"Invalid artifact path (not a file): {artifact.as_posix()}")
+        for artifact in artefacts:
+            if not artifact.is_file():
+                raise Exception(f"Invalid artifact path (not a file): {artifact.as_posix()}")
 
-        result_details = CondaBuildPackageDetails(
-            cmd=rattler_build_bin,
-            args=args[1:],
-            stdout=result.stdout,
-            stderr=result.stderr,
-            exit_code=result.exit_code,
+        if output_folder:
+            all_artifacts = []
+            output_folder_path = Path(output_folder)  # type: ignore
+            output_folder_path.mkdir(parents=True, exist_ok=True)
+            for artifact in artefacts:
+                artifact_path = shutil.copy(artifact, output_folder_path)
+                all_artifacts.append(artifact_path.as_posix())
+        else:
+            all_artifacts = [artifact.as_posix() for artifact in artefacts]
+
+        result_details = RattlerBuildPackageDetails(
+            run_details=all_run_details,
             base_dir=base_dir.as_posix(),
             build_dir=build_dir.as_posix(),
             meta_file=recipe_file.as_posix(),
             package=package,
-            build_artifact=artifact.as_posix()
+            build_artifacts=all_artifacts
         )
         return result_details
 
     def upload_package(
             self,
-            build_result: Union[CondaBuildPackageDetails, str, Path],
+            artifacts_or_folder: Union[str, List[str], Path],
             channel: Union[str, None] = None,
             token: Union[str, None] = None,
             user: Union[None, str] = None,
     ):
 
-        if isinstance(build_result, str):
-            artifact = build_result
-        elif isinstance(build_result, Path):
-            artifact = build_result.as_posix()
-        else:
-            artifact = build_result.build_artifact
+        if isinstance(artifacts_or_folder, str):
+            artifacts_or_folder = [artifacts_or_folder]
+        elif isinstance(artifacts_or_folder, Path):
+            artifacts_or_folder = [artifacts_or_folder.as_posix()]
+
+        artifacts: List[Path] = []
+        for artifact in artifacts_or_folder:
+
+            path = Path(os.path.expanduser(artifact))
+
+            if not path.exists():
+                raise Exception(f"Path does not exist: {path}")
+
+            if path.is_file():
+                artifacts.append(path)
+            elif path.is_dir():
+                for f in path.iterdir():
+                    if f.is_file() and (f.name.endswith(".tar.bz2") or f.name.endswith(".conda")):
+                        artifacts.append(f)
+
 
         build_env_details = self.get_state_details("rattler-build-available")
         rattler_build_bin = build_env_details["rattler_build_bin"]
@@ -163,7 +203,8 @@ class RattlerBuildEnvMgmt(object):
         if user:
             args.extend(["--owner", user])
 
-        args.append(os.path.expanduser(artifact))
+        for artifact_path in artifacts:
+            args.append(artifact_path.as_posix())
 
         env = {
             "ANACONDA_OWNER": user,
@@ -178,5 +219,5 @@ class RattlerBuildEnvMgmt(object):
             env_vars=env
         )
 
-        terminal_print("Uploaded package, details:")
+        terminal_print("Uploaded package(s), details:")
         terminal_print(details)
