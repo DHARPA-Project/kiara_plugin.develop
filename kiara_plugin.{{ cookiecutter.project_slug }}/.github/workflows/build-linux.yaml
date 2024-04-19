@@ -209,7 +209,7 @@ jobs:
     {% raw %}if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags'){% endraw %}
     needs:
       - release_python_package
-      - build_and_release_conda_package
+      - release_conda_package
     steps:
     - uses: actions/checkout@v4
       with:
