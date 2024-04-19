@@ -83,7 +83,7 @@ develop = "kiara_plugin.develop"
 [project.entry-points."kiara.cli_subcommands"]
 debug = "kiara_plugin.develop.interfaces.cli.debug:debug"
 dev = "kiara_plugin.develop.interfaces.cli.dev:dev_group"
-conda = "kiara_plugin.develop.interfaces.cli.conda:conda"
+#conda = "kiara_plugin.develop.interfaces.cli.conda:conda"
 build = "kiara_plugin.develop.interfaces.cli.pkg_build:pkg_build"
 
 
