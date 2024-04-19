@@ -1,6 +1,6 @@
 channels:
-  - conda-forge
   - dharpa
+  - conda-forge
 
 host_requirements:
   - pip
