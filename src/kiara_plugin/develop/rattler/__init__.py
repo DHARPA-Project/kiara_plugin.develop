@@ -173,7 +173,7 @@ class RattlerBuildEnvMgmt(object):
             path = Path(os.path.expanduser(artifact)).absolute()
 
             if not path.exists():
-                raise Exception(f"Path does not exist: {path}")
+                raise Exception(f"Path does not exist: {path.as_posix()}")
 
             if path.is_file():
                 artifacts.append(path)
