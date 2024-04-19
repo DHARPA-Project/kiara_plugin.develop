@@ -9,11 +9,12 @@ module_config:
     b:
       type: boolean
       doc: The second input.
-  outputs_schema:
+  outputs:
     y:
-      type: boolean
-      doc: The output.
-      result_value: true
+      field_schema:
+        type: boolean
+        doc: The output.
+      data: true
 inputs:
   a: true
   b: true

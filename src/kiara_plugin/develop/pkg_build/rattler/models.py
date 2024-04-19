@@ -74,6 +74,7 @@ class PkgSpec(BaseModel):
         description="The package version, either version number, or git branch/tag."
     )
     pkg_url: str = Field(description="The package url.")
+    pkg_is_local: bool = Field(description="Is the package a local project.", default=False)
     pkg_hash: Union[str, None] = Field(
         description="The package hash (sha256), if not git url.", default=None
     )
@@ -139,6 +140,12 @@ class PkgSpec(BaseModel):
         result: str = template.render(pkg_info=self)
         return result
 
+    def create_rattler_build_recipe(self) -> str:
+
+        template = self.jinja_environment().get_template("rattler-build-recipe.yaml.j2")
+        result: str = template.render(pkg_info=self)
+        return result
+
 
 class RunDetails(BaseModel):
 
@@ -156,3 +163,12 @@ class CondaBuildPackageDetails(RunDetails):
     meta_file: str = Field(description="The path to the package meta file.")
     package: PkgSpec = Field(description="Package metadata.")
     build_artifact: str = Field(description="Path to the package build artifact.")
+
+class RattlerBuildPackageDetails(BaseModel):
+
+    run_details: List[RunDetails] = Field(description="The run details.")
+    base_dir: str = Field(description="The base directory.")
+    build_dir: str = Field(description="The build directory.")
+    meta_file: str = Field(description="The path to the package meta file.")
+    package: PkgSpec = Field(description="Package metadata.")
+    build_artifacts: List[str] = Field(description="Path to the package build artifacts.")

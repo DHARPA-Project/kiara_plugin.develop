@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 # helper function, from: https://gist.github.com/thelinuxkid/5114777
+import os
 import selectors
 import subprocess
 from pathlib import Path
 from subprocess import Popen
-from typing import Callable, Generator, Union
+from typing import TYPE_CHECKING, Callable, Generator, Union
 
-from kiara_plugin.develop.conda import RunDetails
+if TYPE_CHECKING:
+    from kiara_plugin.develop.pkg_build.models import RunDetails
 
 newlines = ["\n", "\r\n", "\r"]
 
@@ -54,12 +56,12 @@ def unbuffered(
 
 
 class ExecutionException(Exception):
-    def __init__(self, msg, run_details: RunDetails):
+    def __init__(self, msg, run_details: "RunDetails"):
         self._run_details = run_details
         super().__init__(msg)
 
     @property
-    def run_details(self) -> RunDetails:
+    def run_details(self) -> "RunDetails":
         return self._run_details
 
 
@@ -69,11 +71,19 @@ def execute(
     stdout_callback: Union[Callable, None] = None,
     stderr_callback: Union[Callable, None] = None,
     cwd: Union[None, str, Path] = None,
-) -> RunDetails:
+    env_vars: Union[None, dict] = None,
+) -> "RunDetails":
+
+    from kiara_plugin.develop.pkg_build.models import RunDetails
 
     stdout_output = []
     stderr_output = []
     _args = list(args)
+
+    process_env_vars = os.environ.copy()
+    if env_vars:
+        process_env_vars.update(env_vars)
+
     with subprocess.Popen(
         [cmd,*_args],
         shell=False,
@@ -81,6 +91,7 @@ def execute(
         stderr=subprocess.PIPE,
         universal_newlines=True,
         cwd=cwd,
+        env=process_env_vars
     ) as proc:
         for line in unbuffered(proc, stdout_prefix="o-", stderr_prefix="e-"):
             if line.startswith("o-"):

@@ -3,15 +3,18 @@ name = "kiara-plugin-develop"
 version = "0.1.0"
 description = "Development utilities for kiara."
 authors = ["Markus Binsteiner <markus@frkl.io>"]
-channels = ["conda-forge", "dharpa"]
+channels = ["dharpa", "conda-forge"]
 platforms = ["linux-64", "win-64", "osx-64", "osx-arm64"]
 
 [tasks]
-install-dev-env = "pip install -e '.[dev_utils]' && .pixi/env/bin/pre-commit install"
-pre-commit-check = "pre-commit run --all-files"
+install-dev-env = "pip install --upgrade -e '.[dev_utils]'"
+pre-commit-check = ".pixi/env/bin/pre-commit run --all-files"
+tests = "py.test"
+mypy = "mypy  --namespace-packages --explicit-package-base src/kiara_plugin/develop"
 kiara = ".pixi/env/bin/kiara"
 show-versions = ".pixi/env/bin/kiara --version"
 delete-context = ".pixi/env/bin/kiara context delete"
+install-dev-dependency = ".pixi/env/bin/pip install -e"
 
 [dependencies]
 python = "3.11.*"
