@@ -8,7 +8,7 @@ from subprocess import Popen
 from typing import TYPE_CHECKING, Callable, Generator, Union
 
 if TYPE_CHECKING:
-    from kiara_plugin.develop.conda.models import RunDetails
+    from kiara_plugin.develop.pkg_build.models import RunDetails
 
 newlines = ["\n", "\r\n", "\r"]
 
