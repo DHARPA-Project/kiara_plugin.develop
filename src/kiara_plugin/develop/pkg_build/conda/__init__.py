@@ -16,7 +16,6 @@ from kiara_plugin.develop.conda.models import (
 from kiara_plugin.develop.conda.states import (
     MambaEnvironment,
     MicroMambaAvailable,
-    States,
 )
 from kiara_plugin.develop.defaults import (
     DEFAULT_PYTHON_VERSION,
@@ -24,6 +23,7 @@ from kiara_plugin.develop.defaults import (
     KIARA_DEV_MICROMAMBA_ENV,
     KIARA_DEV_MICROMAMBA_TARGET_PREFIX,
 )
+from kiara_plugin.develop.pkg_build.states import States
 
 CACHE_DIR = os.path.join(KIARA_DEV_CACHE_FOLDER, "pypi_cache")
 cache = Cache(CACHE_DIR)

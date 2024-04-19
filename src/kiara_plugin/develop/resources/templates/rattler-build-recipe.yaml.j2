@@ -30,6 +30,9 @@ requirements:
 {% for req in pkg_info.pkg_requirements %}    - {{ req }}
 {% endfor %}
 
+{% set test_str = pkg_info.test.generate_rattler_test_section() %}
+{% if test_str %}{{ test_str }}{% endif %}
+
 about:
   homepage: {{ pkg_info.metadata.home }}
   license: {{ pkg_info.metadata.license }}

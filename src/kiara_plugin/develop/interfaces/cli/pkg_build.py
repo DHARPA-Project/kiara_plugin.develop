@@ -46,7 +46,7 @@ def conda(ctx):
 @click.option(
     "--channel",
     "-c",
-    help="The conda channel to publis to.",
+    help="The conda channel to publish to.",
     required=False
 )
 @click.option("--output-folder", "-o", help="The output folder for the built package.", required=False)
@@ -87,8 +87,8 @@ def build_package_from_spec(
             sys.exit(1)
 
     from kiara.utils.files import get_data_from_file
-    from kiara_plugin.develop.conda import PkgSpec
-    from kiara_plugin.develop.rattler import RattlerBuildEnvMgmt
+    from kiara_plugin.develop.pkg_build.models import PkgSpec
+    from kiara_plugin.develop.pkg_build.rattler import RattlerBuildEnvMgmt
 
     rattler_mgmt: RattlerBuildEnvMgmt = RattlerBuildEnvMgmt()
 
@@ -202,7 +202,7 @@ def build_package_spec(
 @click.option(
     "--channel",
     "-c",
-    help="The conda channel to publis to.",
+    help="The conda channel to publish to.",
     required=False
 )
 @click.option(
@@ -230,7 +230,7 @@ def build_package(
 ):
     """Create a conda environment."""
 
-    from kiara_plugin.develop.rattler import RattlerBuildEnvMgmt
+    from kiara_plugin.develop.pkg_build.rattler import RattlerBuildEnvMgmt
     from kiara_plugin.develop.utils.pkg_utils import create_pkg_spec, get_pkg_metadata
 
     if publish and not token:
@@ -253,7 +253,7 @@ def build_package(
         if not os.environ.get("ANACONDA_CHANNEL"):
             terminal_print()
             terminal_print(
-                "Package publishing enabled, but no channel provided. Use the '--channel' cli option to set."
+                "Package publishing enabled, but no channel provided. Either use the '--channel' cli option or populate the 'ANACONDA_CHANNEL' environment variable."
             )
             sys.exit(1)
 
@@ -294,7 +294,7 @@ def build_package(
 @click.option(
     "--channel",
     "-c",
-    help="The conda channel to publis to.",
+    help="The conda channel to publish to.",
     required=False
 )
 @click.option(
@@ -310,7 +310,7 @@ def publish_conda_pkgs(ctx, artifact_or_folder,
     channel: Union[str, None] = None,):
     """Publish one or several conda packages."""
 
-    from kiara_plugin.develop.rattler import RattlerBuildEnvMgmt
+    from kiara_plugin.develop.pkg_build.rattler import RattlerBuildEnvMgmt
 
     if not token:
         if not os.environ.get("ANACONDA_PUSH_TOKEN"):

@@ -74,7 +74,7 @@ def execute(
     env_vars: Union[None, dict] = None,
 ) -> "RunDetails":
 
-    from kiara_plugin.develop.conda.models import RunDetails
+    from kiara_plugin.develop.pkg_build.models import RunDetails
 
     stdout_output = []
     stderr_output = []

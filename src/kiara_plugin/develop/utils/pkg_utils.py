@@ -6,7 +6,7 @@ from typing import Any, Dict, Iterable, Mapping, MutableMapping, Union
 import httpx
 
 from kiara.utils.cli import terminal_print
-from kiara_plugin.develop.conda.models import (
+from kiara_plugin.develop.pkg_build.models import (
     DEFAULT_HOST_DEPENDENCIES,
     PkgSpec,
 )

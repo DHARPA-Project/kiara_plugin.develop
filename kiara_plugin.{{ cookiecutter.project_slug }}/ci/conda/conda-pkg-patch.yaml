@@ -5,7 +5,7 @@ channels:
 host_requirements:
   - pip
   - python
-  - setuptools<=63
+  - setuptools
   - setuptools_scm
 
 test:

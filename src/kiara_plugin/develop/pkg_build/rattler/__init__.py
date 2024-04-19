@@ -7,19 +7,17 @@ from typing import List, Union
 from diskcache import Cache
 
 from kiara.utils.cli import terminal_print
-from kiara_plugin.develop.conda.models import (
-    PkgSpec,
-    RattlerBuildPackageDetails,
-    RunDetails,
-)
-from kiara_plugin.develop.conda.states import (
-    States,
-)
 from kiara_plugin.develop.defaults import (
     DEFAULT_PYTHON_VERSION,
     KIARA_DEV_CACHE_FOLDER,
 )
-from kiara_plugin.develop.rattler.states import RattlerBuildAvailable
+from kiara_plugin.develop.pkg_build.models import (
+    PkgSpec,
+    RattlerBuildPackageDetails,
+    RunDetails,
+)
+from kiara_plugin.develop.pkg_build.rattler.states import RattlerBuildAvailable
+from kiara_plugin.develop.pkg_build.states import States
 from kiara_plugin.develop.utils import execute
 
 CACHE_DIR = os.path.join(KIARA_DEV_CACHE_FOLDER, "pypi_cache")
