@@ -193,11 +193,6 @@ jobs:
       - build_python_package
       - build_conda_package
     steps:
-      - name: Retrieve build distributions
-        uses: actions/download-artifact@v4
-        with:
-          name: conda-pkgs
-          path: build-dir/
       - name: "Set up Python 3.12"
         uses: actions/setup-python@v5
         with:
@@ -215,6 +210,11 @@ jobs:
         run: pip install kiara
       - name: install required plugin packages
         run: pip install git+https://github.com/DHARPA-Project/kiara_plugin.develop.git@develop
+      - name: Retrieve build distributions
+        uses: actions/download-artifact@v4
+        with:
+          name: conda-pkgs
+          path: build-dir/
       - name: release conda package
         run: kiara build conda publish --user dharpa --channel dharpa --token ${{ secrets.ANACONDA_PUSH_TOKEN }} build-dir
 
