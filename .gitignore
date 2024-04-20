@@ -64,6 +64,10 @@ ci/conda/**/build
 ci/conda/kiara_plugin.develop/
 .pixi
 pixi.lock
+<<<<<<< ours
 recipe/
 output/
 build-dir/
+=======
+output/
+>>>>>>> theirs
