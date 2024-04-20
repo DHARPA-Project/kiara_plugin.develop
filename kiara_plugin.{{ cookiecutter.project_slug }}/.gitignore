@@ -64,4 +64,4 @@ ci/conda/**/build
 ci/conda/kiara_plugin.{{ cookiecutter.project_slug }}/meta.yaml
 .pixi
 pixi.lock
-dev.py
+output/
