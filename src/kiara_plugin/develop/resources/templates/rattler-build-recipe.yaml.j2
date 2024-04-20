@@ -20,6 +20,10 @@ build:
   number: 1
   noarch: python
   script: 'python -m pip install --no-deps --ignore-installed .'
+{% if pkg_info.entry_points %}  python:
+    entry_points:{% for k, v in pkg_info.entry_points.items() %}
+    - {{ k }} = {{ v }}{% endfor %}
+{% endif %}
 
 requirements:
   host:
