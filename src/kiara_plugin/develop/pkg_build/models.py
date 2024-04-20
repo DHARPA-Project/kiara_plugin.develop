@@ -75,18 +75,14 @@ class PkgSpecTests(BaseModel):
         for command in self.commands:
             script_tests_data.setdefault("script", []).append(command)
 
-        python_tests_data: Dict[str, List[str]] = {}
+        python_tests_data: Dict[str, Any] = {
+            "pip_check": False
+        }
         for import_ in self.imports:
             python_tests_data.setdefault("imports", []).append(import_)
 
-        # full_data = {
-        #     "tests":  [script_tests_data, {"python": python_tests_data}]
-        #
-        # }
-
-        # not doing python tests for now, because rattler does run 'pip check' which is broken atm
         full_data = {
-            "tests":  [script_tests_data]
+            "tests":  [script_tests_data, {"python": python_tests_data}]
 
         }
 
