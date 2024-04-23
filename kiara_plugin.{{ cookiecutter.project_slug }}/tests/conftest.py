@@ -16,6 +16,7 @@ import uuid
 from pathlib import Path
 
 import pytest
+from _pytest.compat import NotSetType
 
 from kiara.context import KiaraConfig
 from kiara.api import KiaraAPI, JobDesc
@@ -35,6 +36,10 @@ def create_temp_dir():
     return instance_path
 
 def get_job_alias(job_desc: JobDesc) -> str:
+
+    if isinstance(job_desc, NotSetType):
+        return "-- no example jobs --"
+
     return job_desc.job_alias
 
 @pytest.fixture
