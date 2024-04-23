@@ -244,6 +244,9 @@ ignore_missing_imports = true
 channels = ["dharpa", "conda-forge"]
 platforms = ["linux-64", "win-64", "osx-64", "osx-arm64"]
 
+[tool.pixi.dependencies]
+pip = ">=24.0,<25"
+
 [tool.pixi.pypi-dependencies]
 {{ cookiecutter.project_slug }} = { path = ".", editable = true }
 
