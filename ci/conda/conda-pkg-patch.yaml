@@ -15,8 +15,8 @@ test:
   imports:
     - kiara_plugin.develop
   source_files:
-    - tests
-    - examples
+    - tests/
+    - examples/
   commands:
     - kiara module list
     - kiara build
