@@ -79,12 +79,13 @@ jobs:
       - name: Test with mypy
         run: make mypy
 
-  linting-linux:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: lint sourcecode
-        uses: chartboost/ruff-action@v1
+# does not seem to work with the pyproject.toml in the template directory
+#  linting-linux:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v4
+#      - name: lint sourcecode
+#        uses: chartboost/ruff-action@v1
 
   build_python_package:
     name: build python package
@@ -120,7 +121,7 @@ jobs:
     needs:
       - test-linux
       - mypy-linux
-      - linting-linux
+#      - linting-linux
       - build_conda_package
       - build_python_package
     permissions:
@@ -152,7 +153,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: install kiara_plugin.develop
-        run: pip install kiara_plugin.develop
+        run: pip install .
       - name: build conda package
         run: kiara build conda pkg --channel dharpa --channel conda-forge --patch-data ci/conda/conda-pkg-patch.yaml --output-folder build-dir .
       - name: upload artifacts
@@ -168,7 +169,7 @@ jobs:
     needs:
       - test-linux
       - mypy-linux
-      - linting-linux
+#      - linting-linux
       - build_python_package
       - build_conda_package
     steps:
