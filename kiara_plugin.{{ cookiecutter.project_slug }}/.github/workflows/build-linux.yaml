@@ -202,7 +202,7 @@ jobs:
           name: conda-pkgs
           path: build-dir/
       - name: release conda package
-        run: kiara build conda publish --user dharpa --channel dharpa --token {% raw %}${{ secrets.ANACONDA_PUSH_TOKEN }} build-dir{% endraw %}
+        run: kiara build conda publish --user dharpa --channel main --token {% raw %}${{ secrets.ANACONDA_PUSH_TOKEN }} build-dir{% endraw %}
 
   merge_tag_to_main:
     name: merge current tag to main branch
