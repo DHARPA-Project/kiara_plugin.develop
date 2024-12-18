@@ -124,7 +124,7 @@ class PkgSpec(BaseModel):
         description="The package entry point(s).", default_factory=dict
     )
 
-    _environment: Environment = PrivateAttr(None)
+    _environment: Environment = PrivateAttr(None)  # type: ignore
 
     @model_validator(mode="before")
     @classmethod

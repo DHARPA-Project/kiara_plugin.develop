@@ -229,14 +229,14 @@ def extract_reqs_from_metadata(
                 assert pkg not in filtered_reqs.keys()
                 filtered_reqs[pkg] = {"version": ver, "condition": cond}
 
-        for extra_pkg, extras in extras_reqs.items():
+        for extra_pkg, _extras in extras_reqs.items():
             # version = filtered_reqs[extra_pkg]["version"]
             # TODO: figure out the right version if there's a condition
             version = None
             req_metadata = get_pkg_metadata_from_pypi(
                 pkg_name=extra_pkg, version=version
             )
-            new_reqs = extract_reqs_from_metadata(req_metadata, extras=extras)
+            new_reqs = extract_reqs_from_metadata(req_metadata, extras=_extras)
             for k, v in new_reqs.items():
                 if k in filtered_reqs.keys():
                     continue
