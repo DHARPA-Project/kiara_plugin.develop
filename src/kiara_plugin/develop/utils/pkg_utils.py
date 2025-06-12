@@ -418,7 +418,11 @@ def create_pkg_spec(
             if req_repl_dict and k in req_repl_dict.keys():
                 repl = req_repl_dict[k]
                 if repl:
-                    req_list.append(req_repl_dict[k])
+                    if not v.get("version"):
+                        r_str = req_repl_dict[k]
+                    else:
+                        r_str = f"{req_repl_dict[k]} {v['version']}"
+                    req_list.append(r_str)
             else:
                 if not v.get("version"):
                     pkg_str = k
