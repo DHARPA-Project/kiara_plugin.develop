@@ -266,6 +266,7 @@ def build_package(
 
         _patch_data = get_data_from_file(patch_data)
 
+
     metadata = get_pkg_metadata(
         pkg=pkg, version=version, force_version=force_version
     )

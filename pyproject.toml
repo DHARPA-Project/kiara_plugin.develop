@@ -55,7 +55,8 @@ dependencies = [
     "license-expression>=30.1.0",
     "setuptools>=64",
     "setuptools_scm[toml]>8",
-    "wheel"
+    "wheel",
+    "copier>=9.7.0,<10.0.0"
 ]
 dynamic = ["version"]
 
@@ -76,6 +77,7 @@ develop = "kiara_plugin.develop"
 [project.entry-points."kiara.cli_subcommands"]
 debug = "kiara_plugin.develop.interfaces.cli.debug:debug"
 dev = "kiara_plugin.develop.interfaces.cli.dev:dev_group"
+plugin = "kiara_plugin.develop.interfaces.cli.plugin:plugin_group"
 #conda = "kiara_plugin.develop.interfaces.cli.conda:conda"
 build = "kiara_plugin.develop.interfaces.cli.pkg_build:pkg_build"
 

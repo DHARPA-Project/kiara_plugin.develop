@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 from pathlib import Path
-from typing import Any, Dict, Iterable, Mapping, MutableMapping, Union
+from typing import Any, Dict, Iterable, Mapping, MutableMapping, Union, Tuple
 
 import httpx
 
@@ -158,15 +158,15 @@ def extract_reqs_from_metadata(
     ) -> Dict[str, Dict[str, Any]]:
 
         reqs = pkg_metadata.get("requires_dist", None)
-
         if not reqs:
             return {}
 
         filtered_reqs: Dict[str, Dict[str, Any]] = {}
         extras_reqs = {}
-        for r in reqs:
-            tokens = r.split(";")
-            if len(tokens) == 1:
+
+        def extract_package_and_version(token: str) -> Tuple[str, Union[str, None]]:
+
+            if "(" in token or " " in token:
                 pkg_tokens = tokens[0].strip().split(" ")
                 if len(pkg_tokens) == 1:
                     pkg = pkg_tokens[0]
@@ -174,16 +174,44 @@ def extract_reqs_from_metadata(
                 elif len(pkg_tokens) == 2:
                     pkg = pkg_tokens[0]
                     if pkg_tokens[1][0] == "(":
-                        min = 1
+                        _min = 1
                     else:
-                        min = 0
+                        _min = 0
                     if pkg_tokens[1][-1] == ")":
-                        max = -1
+                        _max = -1
                     else:
-                        max = len(pkg_tokens[1])
-                    ver = pkg_tokens[1][min:max]
+                        _max = len(pkg_tokens[1])
+                    ver = pkg_tokens[1][_min:_max]
                 else:
                     raise Exception(f"Can't parse version for pkg: {tokens[0]}")
+            elif ">" in token or "=" in token or "<" in token:
+                if ">" in token:
+                    idx_gt = token.index(">")
+                else:
+                    idx_gt = len(token)
+                if "=" in token:
+                    idx_eq = token.index("=")
+                else:
+                    idx_eq = len(token)
+                if "<" in token:
+                    idx_lt = token.index("<")
+                else:
+                    idx_lt = len(token)
+
+                min_idx = min(idx_gt, idx_eq, idx_lt)
+                pkg = token[0:min_idx]
+                ver = token[min_idx:]
+
+            else:
+                pkg = token
+                ver = None
+
+            return pkg, ver
+
+        for r in reqs:
+            tokens = r.split(";")
+            if len(tokens) == 1:
+                pkg, ver = extract_package_and_version(tokens[0].strip())
                 cond = None
             elif len(tokens) == 2:
                 if "extra" in tokens[1]:
