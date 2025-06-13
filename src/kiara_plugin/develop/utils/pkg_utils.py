@@ -277,7 +277,17 @@ def extract_reqs_from_metadata(
             else:
                 fixed[k] = filtered_reqs[k]
 
-        return fixed
+        # special cases
+        final_fixed = {}
+        for pkg, details in fixed.items():
+
+            if pkg.startswith("kiara_plugin_"):
+                final_fixed[pkg.replace("kiara_plugin_", "kiara_plugin.")] = details
+            else:
+                final_fixed[pkg] = details
+
+
+        return final_fixed
 
 def get_pkg_metadata(
     pkg: str,
@@ -313,6 +323,7 @@ def get_pkg_metadata_from_project_folder(
     ) -> Mapping[str, Any]:
 
     from build.util import project_wheel_metadata
+
 
     wheel_data = project_wheel_metadata(project_path)
 
